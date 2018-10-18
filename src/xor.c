@@ -5,7 +5,7 @@
 #include "matrix/matrix.h"
 
 int main(){
-  srand ( 1);
+  srand (time(NULL));
 
   static unsigned int EPOCHS = 1000;
 
