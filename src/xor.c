@@ -4,10 +4,10 @@
 
 #include "matrix/matrix.h"
 
+#define EPOCHS 1000
+
 int main(){
   srand (time(NULL));
-
-  static unsigned int EPOCHS = 1000;
 
   /*
    * X = [[0,0],
@@ -76,8 +76,6 @@ int main(){
   x.data[0].data[0] = 0.0;
   x.data[0].data[1] = 0.0;
   printf("Xor(0, 0) = %lf ( expected : %lf )\n", sigmoidMatrix(dotMatrix(sigmoidMatrix(dotMatrix(x, w0), false), w1), false).data[0].data[0], y.data[0].data[0]);
-
-  //printMatrix(x);
 
   x.data[0].data[0] = 1.0;
   x.data[0].data[1] = 0.0;
