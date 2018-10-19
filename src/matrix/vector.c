@@ -11,8 +11,7 @@ Vector initVector(size_t size, bool random){
   v.data = (double*) calloc(size, sizeof(double));
   
   if(random){
-    size_t i;
-    for(i = 0; i < size; i++){
+    for(size_t i = 0; i < size; i++){
       v.data[i] = (double)rand()/RAND_MAX*2.0-1.0;;
     }
   }
@@ -21,9 +20,8 @@ Vector initVector(size_t size, bool random){
 }
 
 void printVector(Vector v){
-  int i;
   printf("[ ");
-  for(i = 0; i < v.size; i++){
+  for(size_t i = 0; i < v.size; i++){
     printf("%lf ", v.data[i]);
   }
   printf("]\n");
@@ -37,24 +35,24 @@ Vector addVector(Vector a, Vector b){
   if(a.size != b.size)
     return initVector(0, false);
 
-  unsigned int size = a.size;
+  size_t size = a.size;
   Vector res = initVector(size, false);
-  int i;
-  for(i = 0; i < size; i++){
+
+  for(size_t i = 0; i < size; i++){
     res.data[i] = a.data[i] + b.data[i];
   }
-
+  
   return res;
 }
 
 
 Vector scalarVector(Vector v, double s){
   Vector res = initVector(v.size, false);
-  int i;
-  for(i = 0; i < v.size; i++){
+  
+  for(size_t i = 0; i < v.size; i++){
     res.data[i] = s*v.data[i];
   }
-
+  
   return res;
 }
 
@@ -62,10 +60,10 @@ Vector multVector(Vector a, Vector b){
   if(a.size != b.size)
     return initVector(0, false);
 
-  unsigned int size = a.size;
+  size_t size = a.size;
   Vector res = initVector(size, false);
-  int i;
-  for(i = 0; i < size; i++){
+
+  for(size_t i = 0; i < size; i++){
     res.data[i] = a.data[i] * b.data[i];
   }
 
@@ -80,8 +78,8 @@ double sigmoid(double x, bool deriv){
 
 Vector sigmoidVector(Vector v, bool deriv){
   Vector res = initVector(v.size, false);
-  int i;
-  for(i = 0; i < res.size; i++){
+
+  for(size_t i = 0; i < res.size; i++){
     res.data[i] = sigmoid(v.data[i], deriv);
   }
 
