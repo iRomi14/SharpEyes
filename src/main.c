@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL.h>
-
+#include "pixel/pixel_operations.h"
 
 /*
 	Installation : sudo apt-get install libsdl2-dev
@@ -19,7 +19,26 @@ void SDL_ExitError(const char *message);
 void SDL_ExitSupress(const char *message, SDL_Renderer *renderer, SDL_Window *fenetre);
 void PressedKey(void);
 
-int main(int argc, char **argv){
+void To_GrayScale(SDL_Surface *image_surface)
+{
+  int width = image_surface->w;
+  int height = image_surface->h;
+
+  for (int x = 0 ; x < width; x++) {
+    for (int y = 0; y < height; y++) {
+      Uint32 pixel = get_pixel(image_surface,x,y);
+      Uint8 r, g, b;
+      SDL_GetRGB(pixel, image_surface->format, &r, &g, &b);
+      Uint8 average = 0.3*r + 0.59*g + 0.11*b;
+      r = g = b = average;
+      Uint32 new_pixel = SDL_MapRGB(image_surface->format, r, g, b);
+      put_pixel(image_surface, x, y, new_pixel);
+    }
+  }
+}
+
+
+int main(){
 	
 	SDL_version nb;
 	SDL_VERSION(&nb);
@@ -52,10 +71,12 @@ int main(int argc, char **argv){
 	//------ Importer l'image ------
 	SDL_Surface *image;
 	SDL_Texture *texture;
-	SDL_PixelFormat *pix;
-	SDL_Color *color;
+	//SDL_PixelFormat *pix;
+	//SDL_Color *color;
 
-	image = SDL_LoadBMP("signpassage.bmp");
+	image = SDL_LoadBMP("exemples/signpassage.bmp");
+
+	To_GrayScale(image);
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
