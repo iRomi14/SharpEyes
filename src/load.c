@@ -13,10 +13,11 @@
 
 #define WIDTH 800
 #define HEIGHT 600
-#define XTIME 6000
+#define XTIME 500
 
 void SDL_ExitError(const char *message);
 void SDL_ExitSupress(const char *message, SDL_Renderer *renderer, SDL_Window *fenetre);
+void PressedKey(void);
 
 int main(int argc, char **argv){
 	
@@ -51,6 +52,8 @@ int main(int argc, char **argv){
 	//------ Importer l'image ------
 	SDL_Surface *image;
 	SDL_Texture *texture;
+	SDL_PixelFormat *pix;
+	SDL_Color *color;
 
 	image = SDL_LoadBMP("signpassage.bmp");
 
@@ -76,6 +79,7 @@ int main(int argc, char **argv){
 	//------ Utilisation de la fenetre ------
 
 	SDL_RenderPresent(renderer); //Rafraichi la fenetre pour le rendu : SDL_RenderClear(renderer) pour effeacer le rendu
+	PressedKey();
 
 	SDL_Delay(XTIME); //pause for x time in ms
 
@@ -98,5 +102,12 @@ void SDL_ExitSupress(const char *message, SDL_Renderer *renderer, SDL_Window *fe
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(fenetre);
 	SDL_ExitError(message);
+}
+
+void PressedKey(void){
+	SDL_Event event;
+	do{
+		SDL_PollEvent(&event);
+	}while(event.type != SDL_KEYDOWN);
 }
 
