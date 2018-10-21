@@ -30,7 +30,13 @@ void To_GrayScale(SDL_Surface *image_surface)
       Uint8 r, g, b;
       SDL_GetRGB(pixel, image_surface->format, &r, &g, &b);
       Uint8 average = 0.3*r + 0.59*g + 0.11*b;
-      r = g = b = average;
+
+      if (average <= 127)
+        r = g = b = 0;
+
+      if (average >127)
+        r = g = b = 255;
+
       Uint32 new_pixel = SDL_MapRGB(image_surface->format, r, g, b);
       put_pixel(image_surface, x, y, new_pixel);
     }
@@ -39,14 +45,14 @@ void To_GrayScale(SDL_Surface *image_surface)
 
 
 int main(){
-	
+
 	SDL_version nb;
 	SDL_VERSION(&nb);
 	SDL_Window *fenetre;
 	SDL_Renderer *renderer;
 
 	printf ("Hello, you're on SDL %d.%d\n", nb.major, nb.minor);
-	
+
 
 	//Lancement de SDL
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -131,4 +137,3 @@ void PressedKey(void){
 		SDL_PollEvent(&event);
 	}while(event.type != SDL_KEYDOWN);
 }
-
