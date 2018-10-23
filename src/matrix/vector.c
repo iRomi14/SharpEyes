@@ -27,6 +27,14 @@ void printVector(Vector v){
   printf("]\n");
 }
 
+void writeVector(FILE *out, Vector v){
+  fprintf(out, "[ ");
+  for(size_t i = 0; i < v.size; i++){
+    fprintf(out, "%lf ", v.data[i]);
+  }
+  fprintf(out, "]\n");
+}
+
 void freeVector(Vector v){
   free(v.data);
 }

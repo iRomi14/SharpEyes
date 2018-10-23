@@ -1,10 +1,61 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "matrix/matrix.h"
 
 #define EPOCHS 1000
+
+#define saveFile "weights.se"
+
+typedef struct NeuralNet {
+  Matrix *weights;
+  Matrix *part_d;
+  size_t layers;
+} NN;
+
+Matrix forward(NN neuralNet, Matrix X){
+  Matrix y = X;
+  for(size_t i = 0; i < neuralNet.layers; i++){
+    y = sigmoidMatrix(dotMatrix(y, neuralNet.weights[i]), false);
+    neuralNet.part_d[i] = y;
+  }
+
+  return y;
+}
+
+void backward(NN neuralNet, Matrix error, Matrix X){
+
+  Matrix delta, prev;
+
+
+
+  for(int i = (int)neuralNet.layers-1; i >= 0; i--){
+    if(i > 0)
+      prev = neuralNet.part_d[i-1];
+    else
+      prev = X;
+
+    delta = multMatrix(error,sigmoidMatrix(neuralNet.part_d[i], true));
+    error = dotMatrix(delta, transpose(neuralNet.weights[i]));
+
+    neuralNet.weights[i] = addMatrix(neuralNet.weights[i], dotMatrix(transpose(prev), delta));
+    
+  }
+}
+
+void saveWeights(NN neuralNet){
+	FILE *fp;
+	fp=fopen(saveFile, "w");
+
+	for(size_t i = 0; i < neuralNet.layers; i++){
+	    writeMatrix(fp, neuralNet.weights[i]);
+	}
+
+	fclose(fp);
+}
+
 
 int main(){
   srand (time(NULL));
@@ -38,35 +89,32 @@ int main(){
   y.data[3].data[0] = 0.0;
 
   
-  Matrix w0 = initMatrix(2, 4, true);
-  Matrix w1 = initMatrix(4, 1, true);
+  NN xorNet;
+  xorNet.layers = 2;
 
-  Matrix l1, l2;
-  Matrix l2_error, l1_error;
-  Matrix l2_delta, l1_delta;
+  xorNet.weights = (Matrix *) calloc (xorNet.layers, sizeof(Matrix));
+  xorNet.part_d = (Matrix *) calloc (xorNet.layers, sizeof(Matrix));
+
+  xorNet.weights[0] = initMatrix(2, 4, true);
+  xorNet.weights[1] = initMatrix(4, 1, true);
+
+  Matrix y_pred;
+  Matrix error;
 
   int j;
   for(j = 0; j < EPOCHS; j++){
-    l1 = sigmoidMatrix(dotMatrix(X, w0), false);
-    l2 = sigmoidMatrix(dotMatrix(l1, w1), false);
+    y_pred = forward(xorNet, X);
 
-    l2_error = addMatrix(y, scalarMatrix(l2, -1.0)); // y - l2
+    error = addMatrix(y, scalarMatrix(y_pred, -1.0)); // y - l2
 
     //printMatrix(l2);
     //printf("-----------------\n");
     
-
     if (j% 100 == 0)
-      printf ("Cost at %d epochs : %lf\n", j, meanMatrix(l2_error));
+      printf ("Cost at %d epochs : %lf\n", j, meanMatrix(error));
 
 
-    l2_delta = multMatrix(l2_error,sigmoidMatrix(l2,true));
-
-    l1_error = dotMatrix(l2_delta, transpose(w1));
-    l1_delta = multMatrix(l1_error,sigmoidMatrix(l1,true));
-
-    w1 = addMatrix(w1, dotMatrix(transpose(l1), l2_delta));
-    w0 = addMatrix(w0, dotMatrix(transpose(X), l1_delta));
+    backward(xorNet, error, X);
 
   }
 
@@ -75,19 +123,24 @@ int main(){
   Matrix x = initMatrix(1, 2, false);
   x.data[0].data[0] = 0.0;
   x.data[0].data[1] = 0.0;
-  printf("Xor(0, 0) = %lf ( expected : %lf )\n", sigmoidMatrix(dotMatrix(sigmoidMatrix(dotMatrix(x, w0), false), w1), false).data[0].data[0], y.data[0].data[0]);
+  printf("Xor(0, 0) = %lf ( expected : %lf )\n", forward(xorNet, x).data[0].data[0], y.data[0].data[0]);
 
   x.data[0].data[0] = 1.0;
   x.data[0].data[1] = 0.0;
-  printf("Xor(1, 0) = %lf ( expected : %lf )\n", sigmoidMatrix(dotMatrix(sigmoidMatrix(dotMatrix(x, w0), false), w1), false).data[0].data[0], y.data[1].data[0]);
+  printf("Xor(1, 0) = %lf ( expected : %lf )\n", forward(xorNet, x).data[0].data[0], y.data[1].data[0]);
 
   x.data[0].data[0] = 0.0;
   x.data[0].data[1] = 1.0;
-  printf("Xor(0, 1) = %lf ( expected : %lf )\n", sigmoidMatrix(dotMatrix(sigmoidMatrix(dotMatrix(x, w0), false), w1), false).data[0].data[0], y.data[2].data[0]);
+  printf("Xor(0, 1) = %lf ( expected : %lf )\n", forward(xorNet, x).data[0].data[0], y.data[2].data[0]);
 
   x.data[0].data[0] = 1.0;
   x.data[0].data[1] = 1.0;
-  printf("Xor(1, 1) = %lf ( expected : %lf )\n", sigmoidMatrix(dotMatrix(sigmoidMatrix(dotMatrix(x, w0), false), w1), false).data[0].data[0], y.data[3].data[0]);
+  printf("Xor(1, 1) = %lf ( expected : %lf )\n", forward(xorNet, x).data[0].data[0], y.data[3].data[0]);
+
+
+  saveWeights(xorNet);
+
+  printf("Weights saved in %s\n", saveFile);
 
   return 0;
 }

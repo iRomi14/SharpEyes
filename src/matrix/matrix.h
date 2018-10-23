@@ -13,6 +13,7 @@ typedef struct Matrix Matrix;
 Matrix initMatrix(size_t l, size_t m, bool random);
 
 void printMatrix(Matrix m);
+void writeMatrix(FILE *out, Matrix m);
 void freeMatrix(Matrix m);
 
 Matrix addMatrix(Matrix a, Matrix b);

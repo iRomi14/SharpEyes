@@ -15,6 +15,7 @@ typedef struct Vector Vector;
 Vector initVector(size_t size, bool random);
 
 void printVector(Vector v);
+void writeVector(FILE *out, Vector v);
 void freeVector(Vector v);
 
 Vector addVector(Vector a, Vector b);

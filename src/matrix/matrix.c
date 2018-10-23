@@ -17,9 +17,19 @@ Matrix initMatrix(size_t l, size_t m, bool random){
 }
 
 void printMatrix(Matrix m){
+  printf("%zux%zu [ ", m.shape[0], m.shape[1]);
   for(size_t i = 0; i < m.shape[0]; i++){
     printVector(m.data[i]);
   }
+  printf("]\n");
+}
+
+void writeMatrix(FILE *out, Matrix m){
+  fprintf(out, "%zux%zu {\n", m.shape[0], m.shape[1]);
+  for(size_t i = 0; i < m.shape[0]; i++){
+    writeVector(out, m.data[i]);
+  }
+  fprintf(out, "}\n");
 }
 
 void freeMatrix(Matrix m){
