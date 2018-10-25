@@ -1,6 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "decoupage.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <SDL.h>
+
+# include "decoupage.h"
+# include "../pixel/pixel_operations.h"
+# include "../matrix/matrix.h"
 
 // 25/10/2018 MAIN PROBLEM : Use array instead of the created type MatriX
 
@@ -29,7 +33,7 @@ DOWN L                            DOWN R
 //******************************************************************************//
 
 // Process an 1D array
-void rlsa ( int *tabBin[] , size_t seuil )
+/*void rlsa ( int *tabBin[] , size_t seuil )
 {
   size_t i = 0;
   size_t taille = sizeof(*tabBin);
@@ -61,10 +65,10 @@ void rlsa ( int *tabBin[] , size_t seuil )
     i = i + 1;
     mem = 0;
   }
-}
+}*/
 
  //Process an 2D array = array of the binarised image give at the beginning
- void rlsaALL ( int **tabBin, int seuil )
+ /*void rlsaALL ( int **tabBin, int seuil )
   {
     size_t total = sizeof(tabBin);
     size_t column = sizeof(tabBin[0]);
@@ -86,7 +90,7 @@ void rlsa ( int *tabBin[] , size_t seuil )
         rlsa( tabBin[(int)y][(int)x] , (size_t) seuil);
       }
     }
-  }
+  }*/
 
 //******************************************************************************//
 //************** FROM BLOCK TO THE COORDINATE OF THE CORNERS *******************//
@@ -123,8 +127,66 @@ int BlackBoxesProcessing ( int tabBB[][] ; int tabB[][]  )
 */
 
 //******************************************************************************//
-//******************** DETECTION OF WHITE LINES ********************************//
+//********************** DETECTION OF WHITE LINES ******************************//
 //******************************************************************************//
+
+Matrix matrix_ligne(Matrix enter_matrix){
+
+  size_t row = enter_matrix.shape[0];
+
+  Matrix final;
+  initMatrix(&final,row, 1, false);
+
+  for(size_t x = 0; x < row; x++){
+    int count = 0;
+
+    for(size_t y = 0; y < enter_matrix.data[x].size; y++){
+
+      if (enter_matrix.data[x].data[y] == 0)
+        count++;
+    }
+
+    if(count != 0){
+      final.data[x].data[0] = 1;
+    }
+
+    else{
+      final.data[x].data[0] = 0;
+    }
+  }
+  return final;
+
+}
+
+//******************************************************************************//
+//*********************** BMP TO MATRIX OF PIXEL *******************************//
+//******************************************************************************//
+
+Matrix bmp_to_matrix(SDL_Surface *image_surface){
+
+  size_t width = (size_t)image_surface->w; //je recupère la largeur de l'image soit le nombre de pixel en largeur.
+
+  size_t height = (size_t)image_surface->h; //je recupère la hauteur de l'image soit le nombre de pixel en hauteur.
+
+  Matrix final;
+  initMatrix(&final,height, width, false); // j'initialise une matrice de hauteur par largeur.
+
+  for (size_t x = 0 ; x < width; x++) {
+    for (size_t y = 0; y < height; y++) { //je parcour mes pixels un par un.
+
+      Uint32 pixel = get_pixel(image_surface,x,y); // je recupère un pixel.
+      Uint8 r, g, b;
+      SDL_GetRGB(pixel, image_surface->format, &r, &g, &b); // je recupère ces valeur R G B.
+
+      if (r == 255) //blanc
+        final.data[y].data[x] = -1; //si c'est un pixel blanc je met ca valeur à 1.
+
+      if (r == 0) //noir
+        final.data[y].data[x] = 1;//si c'est un pixel noir je met ca valeur à 0.
+    }
+  }
+  return final;
+}
 
 //******************************************************************************//
 //******************** DETECTION OF CHARACTERS ********************************//
