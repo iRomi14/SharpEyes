@@ -1,4 +1,4 @@
-# SlouchyJS
+# SharpEyes
 ```
 A brand new optical character recognizer in C99
 ```
