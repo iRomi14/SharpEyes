@@ -37,8 +37,10 @@ void freeMatrix(Matrix m){
 }
 
 void addMatrix(Matrix *dst, Matrix a, Matrix b){
-  if (a.shape[0] != b.shape[0] || a.shape[1] != b.shape[1])
+  if (a.shape[0] != b.shape[0] || a.shape[1] != b.shape[1]){
+    printf("addMatrix error\n");
     return;
+  }
 
   initMatrix(dst, a.shape[0], a.shape[1], false);
   Vector v;
@@ -61,8 +63,10 @@ void scalarMatrix(Matrix *dst, Matrix m, double s){
 }
 
 void multMatrix(Matrix *dst, Matrix a, Matrix b){
-  if (a.shape[0] != b.shape[0] || a.shape[1] != b.shape[1])
+  if (a.shape[0] != b.shape[0] || a.shape[1] != b.shape[1]){
+    printf("multMatrix error\n");
     return;
+  }
 
   initMatrix(dst, a.shape[0], a.shape[1], false);
   Vector v;
@@ -74,8 +78,10 @@ void multMatrix(Matrix *dst, Matrix a, Matrix b){
 }
 
 void dotMatrix(Matrix *dst, Matrix a, Matrix b){
-  if (a.shape[1] != b.shape[0])
+  if (a.shape[1] != b.shape[0]){
+    printf("dotMatrix error\n");
     return;
+  }
 
   size_t l = a.shape[0];
   size_t m = b.shape[1];

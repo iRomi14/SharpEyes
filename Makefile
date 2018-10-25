@@ -15,11 +15,14 @@ src/pixel_operations.o: src/pixel/pixel_operations.c
 	$(CC) -o src/pixel_operations.o -c src/pixel/pixel_operations.c $(CFLAGS) $(SDLFLAGS)
 
 
-xornn: src/xor.o src/matrix.o src/vector.o
-	$(CC) -o xornn src/xor.o src/matrix.o src/vector.o $(MATHFLAGS)
+xornn: src/xor.o src/matrix.o src/vector.o src/nn.o
+	$(CC) -o xornn src/xor.o src/matrix.o src/vector.o src/nn.o $(MATHFLAGS)
 
 src/xor.o: src/xor.c
 	$(CC) -o src/xor.o -c src/xor.c $(CFLAGS)
+
+src/nn.o: src/neural_net/nn.c
+	$(CC) -o src/nn.o -c src/neural_net/nn.c $(CFLAGS)
 
 src/matrix.o: src/matrix/matrix.c
 	$(CC) -o src/matrix.o -c src/matrix/matrix.c $(CFLAGS)

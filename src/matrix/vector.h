@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 #include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 struct Vector {
 	size_t size;
