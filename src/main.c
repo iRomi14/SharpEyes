@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include "pixel/pixel_operations.h"
+#include "to_binarize.h"
 
 /*
 	Installation : sudo apt-get install libsdl2-dev
@@ -18,30 +19,6 @@
 void SDL_ExitError(const char *message);
 void SDL_ExitSupress(const char *message, SDL_Renderer *renderer, SDL_Window *fenetre);
 void PressedKey(void);
-
-void To_GrayScale(SDL_Surface *image_surface)
-{
-  int width = image_surface->w;
-  int height = image_surface->h;
-
-  for (int x = 0 ; x < width; x++) {
-    for (int y = 0; y < height; y++) {
-      Uint32 pixel = get_pixel(image_surface,x,y);
-      Uint8 r, g, b;
-      SDL_GetRGB(pixel, image_surface->format, &r, &g, &b);
-      Uint8 average = 0.3*r + 0.59*g + 0.11*b;
-
-      if (average <= 127)
-        r = g = b = 0;
-
-      if (average >127)
-        r = g = b = 255;
-
-      Uint32 new_pixel = SDL_MapRGB(image_surface->format, r, g, b);
-      put_pixel(image_surface, x, y, new_pixel);
-    }
-  }
-}
 
 
 int main(){
@@ -68,31 +45,38 @@ int main(){
 	if(fenetre == NULL) //verification en cas d'erreur
 		SDL_ExitError("Creation de fenetre non abouti");
 
-	//------ Creation Rendu ------
+	//------ Creation Rendu ------//
+
 	renderer = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_SOFTWARE/*flag*/);
 
 	if(renderer == NULL)
 		SDL_ExitError("Rendu non fait");
 
-	//------ Importer l'image ------
+	//------ Importer l'image ------//
+
 	SDL_Surface *image;
 	SDL_Texture *texture;
-	//SDL_PixelFormat *pix;
-	//SDL_Color *color;
 
 	image = SDL_LoadBMP("exemples/signpassage.bmp");
 
-	To_GrayScale(image);
+	//----------------- Application des fonctions sur l'image -----------------//
+
+	to_binarize(image);
+
+  //-------------------------------------------------------------------------//
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
 
 	texture = SDL_CreateTextureFromSurface(renderer, image);
+
 	SDL_FreeSurface(image); //on libere la surface qui ne sert plus a rien car la texture est crée
+
 	if (texture == NULL)
 		SDL_ExitSupress("Texture non crée", renderer, fenetre);
 
 	SDL_Rect rectangle; //sera le rectangle contenant l'image
+	
 	if(SDL_QueryTexture(texture, NULL, NULL, &rectangle.w, &rectangle.h) != 0) //charge l'image en mémoire
 		SDL_ExitSupress("Texture non chargée", renderer, fenetre);
 
@@ -103,14 +87,14 @@ int main(){
 		SDL_ExitSupress("Impossible d'afficher la texture", renderer, fenetre);
 
 
-	//------ Utilisation de la fenetre ------
+	//------ Utilisation de la fenetre ------//
 
-	SDL_RenderPresent(renderer); //Rafraichi la fenetre pour le rendu : SDL_RenderClear(renderer) pour effeacer le rendu
+	SDL_RenderPresent(renderer); //Rafraichi la fenetre pour le rendu : SDL_RenderClear(renderer) pour effacer le rendu
 	PressedKey();
 
 	SDL_Delay(XTIME); //pause for x time in ms
 
-	//------ FIN fenetre ------
+	//------ FIN fenetre ------//
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(fenetre);
