@@ -71,9 +71,10 @@ int main(){
 
 	Matrix matrix_image = bmp_to_matrix(image);
 
-  Matrix ligne = matrix_ligne(matrix_image);
-	
-  // ------------------- Print la matrix --------------------//
+	Matrix ligne = matrix_ligne(matrix_image);
+
+	// ------------------- Print la matrix --------------------//
+
 	for(size_t x = 0; x < ligne.shape[0]; x++){
 		printf("[ ");
 		for(size_t y = 0; y < ligne.data[x].size; y++){
