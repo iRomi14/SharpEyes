@@ -6,12 +6,16 @@
 #include "matrix/matrix.h"
 #include "neural_net/nn.h"
 
-#define EPOCHS 10000
-
 #define saveFile "weights.se"
 
-int main(){
+int main(int argc, char *argv[]){
   srand (time(NULL));
+
+  int EPOCHS = 10000;
+
+  if(argc == 2){
+    EPOCHS = atoi(argv[1]);
+  }
 
   /*
    * X = [[0,0],
@@ -64,7 +68,7 @@ int main(){
     addMatrix(&error, y, tmp); // y - y_pred
     freeMatrix(tmp);
 
-    if (j% 1000 == 0)
+    if (j % (EPOCHS/10) == 0)
       printf ("Cost at %d epochs : %lf\n", j, meanMatrix(error));
 
     backward(xorNet, error, X);
