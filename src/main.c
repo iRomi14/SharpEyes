@@ -1,8 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL.h>
-#include "pixel/pixel_operations.h"
-#include "to_binarize.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <SDL.h>
+
+# include "pixel/pixel_operations.h"
+# include "to_binarize.h"
+# include "decoupage_blocs/decoupage.h"
+# include "matrix/matrix.h"
 
 /*
 	Installation : sudo apt-get install libsdl2-dev
@@ -59,14 +62,28 @@ int main(){
 
 	image = SDL_LoadBMP("exemples/signpassage.bmp");
 
+	if (image == NULL)
+		SDL_ExitSupress("Image non crée", renderer, fenetre);
+
 	//----------------- Application des fonctions sur l'image -----------------//
 
 	to_binarize(image);
 
-  //-------------------------------------------------------------------------//
+	Matrix matrix_image = bmp_to_matrix(image);
 
-	if (image == NULL)
-		SDL_ExitSupress("Image non crée", renderer, fenetre);
+  Matrix ligne = matrix_ligne(matrix_image);
+	
+  // ------------------- Print la matrix --------------------//
+	for(size_t x = 0; x < ligne.shape[0]; x++){
+		printf("[ ");
+		for(size_t y = 0; y < ligne.data[x].size; y++){
+
+				printf("%lf ", ligne.data[x].data[y]);
+		}
+		printf("]\n");
+	}
+
+	//-------------------------------------------------------------------------//
 
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 
@@ -76,7 +93,7 @@ int main(){
 		SDL_ExitSupress("Texture non crée", renderer, fenetre);
 
 	SDL_Rect rectangle; //sera le rectangle contenant l'image
-	
+
 	if(SDL_QueryTexture(texture, NULL, NULL, &rectangle.w, &rectangle.h) != 0) //charge l'image en mémoire
 		SDL_ExitSupress("Texture non chargée", renderer, fenetre);
 
