@@ -5,8 +5,8 @@ MATHFLAGS= -lm
 SDLFLAGS = -I/usr/include/SDL2 -D_REENTRANT -L/usr/lib/x86_64-linux-gnu -lSDL2
 
 
-main: src/main.o src/pixel_operations.o
-	$(CC) -o main src/main.o src/pixel_operations.o $(SDLFLAGS)
+main: src/main.o src/pixel_operations.o src/to_binarize.o
+	$(CC) -o main src/main.o src/pixel_operations.o src/to_binarize.o $(SDLFLAGS)
 
 src/main.o: src/main.c
 	$(CC) -o src/main.o -c src/main.c $(CFLAGS) $(SDLFLAGS)
@@ -14,6 +14,8 @@ src/main.o: src/main.c
 src/pixel_operations.o: src/pixel/pixel_operations.c
 	$(CC) -o src/pixel_operations.o -c src/pixel/pixel_operations.c $(CFLAGS) $(SDLFLAGS)
 
+src/to_binarize.o: src/to_binarize.c
+	$(CC) -o src/to_binarize.o -c src/to_binarize.c $(CFLAGS) $(SDLFLAGS)
 
 xornn: src/xor.o src/matrix.o src/vector.o src/nn.o
 	$(CC) -o xornn src/xor.o src/matrix.o src/vector.o src/nn.o $(MATHFLAGS)
