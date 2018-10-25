@@ -5,8 +5,8 @@ MATHFLAGS= -lm
 SDLFLAGS = -I/usr/include/SDL2 -D_REENTRANT -L/usr/lib/x86_64-linux-gnu -lSDL2
 
 
-main: src/main.o src/pixel_operations.o src/to_binarize.o
-	$(CC) -o main src/main.o src/pixel_operations.o src/to_binarize.o $(SDLFLAGS)
+main: src/main.o src/pixel_operations.o src/to_binarize.o src/decoupage.o src/matrix.o src/vector.o
+	$(CC) -o main src/main.o src/pixel_operations.o src/to_binarize.o src/decoupage.o src/matrix.o src/vector.o  $(SDLFLAGS) $(MATHFLAGS)
 
 src/main.o: src/main.c
 	$(CC) -o src/main.o -c src/main.c $(CFLAGS) $(SDLFLAGS)
@@ -16,6 +16,9 @@ src/pixel_operations.o: src/pixel/pixel_operations.c
 
 src/to_binarize.o: src/to_binarize.c
 	$(CC) -o src/to_binarize.o -c src/to_binarize.c $(CFLAGS) $(SDLFLAGS)
+
+src/decoupage.o: src/decoupage_blocs/decoupage.c src/matrix.o src/vector.o
+	$(CC) -o src/decoupage.o src/matrix.o src/vector.o -c src/decoupage_blocs/decoupage.c $(CFLAGS) $(SDLFLAGS) $(MATHFLAGS)
 
 xornn: src/xor.o src/matrix.o src/vector.o src/nn.o
 	$(CC) -o xornn src/xor.o src/matrix.o src/vector.o src/nn.o $(MATHFLAGS)
