@@ -15,33 +15,56 @@ typedef struct NeuralNet {
   size_t layers;
 } NN;
 
-Matrix forward(NN neuralNet, Matrix X){
-  Matrix y = X;
+Matrix forward(NN neuralNet, Matrix in){
+  Matrix out = in;
+  Matrix tmp;
   for(size_t i = 0; i < neuralNet.layers; i++){
-    y = sigmoidMatrix(dotMatrix(y, neuralNet.weights[i]), false);
-    neuralNet.part_d[i] = y;
+    /*  prev_layer = X
+        next_layer = sigmoid(prev_layer *dot* weights[i] );
+        prev_layer = next_layer
+    */
+    dotMatrix(&tmp, out, neuralNet.weights[i]);
+    sigmoidMatrix(&out, tmp, false);
+    neuralNet.part_d[i] = out;
+    freeMatrix(tmp);
   }
 
-  return y;
+  return out;
 }
 
-void backward(NN neuralNet, Matrix error, Matrix X){
+void backward(NN neuralNet, Matrix error, Matrix in){
 
   Matrix delta, prev;
+  Matrix tmp, gradW;
 
+  for(int i = (int)neuralNet.layers-1; i >= 0; i--){ // backpropagation
 
-
-  for(int i = (int)neuralNet.layers-1; i >= 0; i--){
     if(i > 0)
       prev = neuralNet.part_d[i-1];
     else
-      prev = X;
+      prev = in;
 
-    delta = multMatrix(error,sigmoidMatrix(neuralNet.part_d[i], true));
-    error = dotMatrix(delta, transpose(neuralNet.weights[i]));
+    // delta = error * sigmoid'(layer);
+    sigmoidMatrix(&gradW, neuralNet.part_d[i], true);
+    multMatrix(&delta, error, gradW);
+    freeMatrix(gradW);
 
-    neuralNet.weights[i] = addMatrix(neuralNet.weights[i], dotMatrix(transpose(prev), delta));
-    
+    // prev_error = delta *dot* weights[i].T;
+    transpose(&tmp, neuralNet.weights[i]);
+    dotMatrix(&error, delta, tmp);
+    freeMatrix(tmp);
+
+    // weights[i] += delta *dot* prev_layer.T
+    transpose(&tmp, prev);
+    dotMatrix(&gradW, tmp, delta);
+    addMatrix(&neuralNet.weights[i], neuralNet.weights[i], gradW);
+  }
+}
+
+void freeNeuralNet(NN neuralNet){
+  for(size_t i = 0; i < neuralNet.layers; i++){
+    freeMatrix(neuralNet.weights[i]);
+    freeMatrix(neuralNet.part_d[i]);
   }
 }
 
@@ -66,7 +89,8 @@ int main(){
    *      [1,0],
    *      [1,1]]
    */
-  Matrix X = initMatrix(4, 2, false);
+  Matrix X;
+  initMatrix(&X, 4, 2, false);
   X.data[0].data[0] = 0.0;
   X.data[0].data[1] = 0.0;
   X.data[1].data[0] = 1.0;
@@ -82,34 +106,38 @@ int main(){
    *               [1],
    *               [0]]
    */
-  Matrix y = initMatrix(4, 1, false);
+  Matrix y;
+  initMatrix(&y, 4, 1, false);
   y.data[0].data[0] = 0.0;
   y.data[1].data[0] = 1.0;
   y.data[2].data[0] = 1.0;
   y.data[3].data[0] = 0.0;
 
-  
+
   NN xorNet;
   xorNet.layers = 2;
 
   xorNet.weights = (Matrix *) calloc (xorNet.layers, sizeof(Matrix));
   xorNet.part_d = (Matrix *) calloc (xorNet.layers, sizeof(Matrix));
 
-  xorNet.weights[0] = initMatrix(2, 4, true);
-  xorNet.weights[1] = initMatrix(4, 1, true);
+  initMatrix(&xorNet.weights[0], 2, 4, true);
+  initMatrix(&xorNet.weights[1], 4, 1, true);
 
-  Matrix y_pred;
-  Matrix error;
+  Matrix y_pred, error;
+  Matrix tmp;
 
   int j;
   for(j = 0; j < EPOCHS; j++){
     y_pred = forward(xorNet, X);
 
-    error = addMatrix(y, scalarMatrix(y_pred, -1.0)); // y - l2
+    scalarMatrix(&tmp, y_pred, -1.0);
+    addMatrix(&error, y, tmp); // y - y_pred
+    freeMatrix(tmp);
+
 
     //printMatrix(l2);
     //printf("-----------------\n");
-    
+
     if (j% 100 == 0)
       printf ("Cost at %d epochs : %lf\n", j, meanMatrix(error));
 
@@ -118,9 +146,13 @@ int main(){
 
   }
 
+  freeMatrix(X);
+  freeMatrix(y_pred);
+
   printf("---------Output---------\n");
 
-  Matrix x = initMatrix(1, 2, false);
+  Matrix x;
+  initMatrix(&x, 1, 2, false);
   x.data[0].data[0] = 0.0;
   x.data[0].data[1] = 0.0;
   printf("Xor(0, 0) = %lf ( expected : %lf )\n", forward(xorNet, x).data[0].data[0], y.data[0].data[0]);
@@ -137,10 +169,14 @@ int main(){
   x.data[0].data[1] = 1.0;
   printf("Xor(1, 1) = %lf ( expected : %lf )\n", forward(xorNet, x).data[0].data[0], y.data[3].data[0]);
 
+  freeMatrix(x);
+  freeMatrix(y);
 
   saveWeights(xorNet);
 
   printf("Weights saved in %s\n", saveFile);
+
+  freeNeuralNet(xorNet);
 
   return 0;
 }

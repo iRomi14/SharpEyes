@@ -10,23 +10,23 @@ struct Matrix {
 
 typedef struct Matrix Matrix;
 
-Matrix initMatrix(size_t l, size_t m, bool random);
+void initMatrix(Matrix *des, size_t l, size_t m, bool random);
 
 void printMatrix(Matrix m);
 void writeMatrix(FILE *out, Matrix m);
 void freeMatrix(Matrix m);
 
-Matrix addMatrix(Matrix a, Matrix b);
+void addMatrix(Matrix *dst, Matrix a, Matrix b);
 
-Matrix scalarMatrix(Matrix m, double s);
+void scalarMatrix(Matrix *dst, Matrix m, double s);
 
-Matrix multMatrix(Matrix a, Matrix b);
+void multMatrix(Matrix *dst, Matrix a, Matrix b);
 
-Matrix dotMatrix(Matrix a, Matrix b);
+void dotMatrix(Matrix *dst, Matrix a, Matrix b);
 
-Matrix transpose(Matrix m);
+void transpose(Matrix *dst, Matrix m);
 
-Matrix sigmoidMatrix(Matrix m, bool deriv);
+void sigmoidMatrix(Matrix *dst, Matrix m, bool deriv);
 
 //Vector absVector(Vector v);
 //Matrix absMatrix(Matrix m);

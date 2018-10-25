@@ -3,25 +3,22 @@
 
 #include "matrix.h"
 
-Matrix initMatrix(size_t l, size_t m, bool random){
-  Matrix M;
-  M.shape[0] = l;
-  M.shape[1] = m;
-  M.data = (Vector*) calloc (l, sizeof(Vector));
+void initMatrix(Matrix *dst, size_t l, size_t m, bool random){
+  dst->shape[0] = l;
+  dst->shape[1] = m;
+  dst->data = (Vector*) calloc (l, sizeof(Vector));
 
+  Vector v;
   for(size_t i = 0; i < l; i++){
-    M.data[i] = initVector(m, random);
+    initVector(&v, m, random);
+    dst->data[i] = v;
   }
-
-  return M;
 }
 
 void printMatrix(Matrix m){
-  printf("%zux%zu [ ", m.shape[0], m.shape[1]);
   for(size_t i = 0; i < m.shape[0]; i++){
     printVector(m.data[i]);
   }
-  printf("]\n");
 }
 
 void writeMatrix(FILE *out, Matrix m){
@@ -36,92 +33,90 @@ void freeMatrix(Matrix m){
   for(size_t i = 0; i < m.shape[0]; i++){
     freeVector(m.data[i]);
   }
+  free(m.data);
 }
 
-Matrix addMatrix(Matrix a, Matrix b){
+void addMatrix(Matrix *dst, Matrix a, Matrix b){
   if (a.shape[0] != b.shape[0] || a.shape[1] != b.shape[1])
-    return initMatrix(0, 0, false);
+    return;
 
-  Matrix res = initMatrix(a.shape[0], a.shape[1], false);
-
+  initMatrix(dst, a.shape[0], a.shape[1], false);
+  Vector v;
   for(size_t i = 0; i < a.shape[0]; i++){
-    res.data[i] = addVector(a.data[i], b.data[i]);
+    freeVector(dst->data[i]);
+    addVector(&v, a.data[i], b.data[i]);
+    dst->data[i] = v;
   }
-
-  return res;
 }
 
 
-Matrix scalarMatrix(Matrix m, double s){
-  Matrix res = initMatrix(m.shape[0], m.shape[1], false);
-
+void scalarMatrix(Matrix *dst, Matrix m, double s){
+  initMatrix(dst, m.shape[0], m.shape[1], false);
+  Vector v;
   for(size_t i = 0; i < m.shape[0]; i++){
-    res.data[i] = scalarVector(m.data[i], s);
+    freeVector(dst->data[i]);
+    scalarVector(&v, m.data[i], s);
+    dst->data[i] = v;
   }
-
-  return res;
 }
 
-Matrix multMatrix(Matrix a, Matrix b){
+void multMatrix(Matrix *dst, Matrix a, Matrix b){
   if (a.shape[0] != b.shape[0] || a.shape[1] != b.shape[1])
-    return initMatrix(0, 0, false);
+    return;
 
-  Matrix res = initMatrix(a.shape[0], a.shape[1], false);
-
+  initMatrix(dst, a.shape[0], a.shape[1], false);
+  Vector v;
   for(size_t i = 0; i < a.shape[0]; i++){
-    res.data[i] = multVector(a.data[i], b.data[i]);
+    freeVector(dst->data[i]);
+    multVector(&v, a.data[i], b.data[i]);
+    dst->data[i] = v;
   }
-
-  return res;
 }
 
-Matrix dotMatrix(Matrix a, Matrix b){
+void dotMatrix(Matrix *dst, Matrix a, Matrix b){
   if (a.shape[1] != b.shape[0])
-    return initMatrix(0, 0, false);
+    return;
 
   size_t l = a.shape[0];
-  size_t m = b.shape[1]; 
-  Matrix res = initMatrix(l, m, false);
+  size_t m = b.shape[1];
+  initMatrix(dst, l, m, false);
   size_t i, j, k;
 
   Vector v;
   for(i = 0; i < l; i++){
-    v = res.data[i];
+    v = dst->data[i];
     for(j = 0; j < m; j++){
       for(k = 0; k < a.shape[1]; k++){
         v.data[j] += a.data[i].data[k] * b.data[k].data[j];
       }
-    } 
+    }
   }
-
-  return res;
 }
 
-Matrix transpose(Matrix m){
+void transpose(Matrix *dst, Matrix m){
   size_t l = m.shape[0];
-  size_t k = m.shape[1]; 
-  Matrix res = initMatrix(k, l, false);
+  size_t k = m.shape[1];
+  initMatrix(dst, k, l, false);
 
   size_t i, j;
 
   for(i = 0; i < l; i++){
     for(j = 0; j < k; j++){
-      res.data[j].data[i] = m.data[i].data[j];
+      dst->data[j].data[i] = m.data[i].data[j];
     }
   }
-
-  return res;
 }
 
 
-Matrix sigmoidMatrix(Matrix m, bool deriv){
-  Matrix res = initMatrix(m.shape[0], m.shape[1], false);
-  
-  for(size_t i = 0; i < res.shape[0]; i++){
-    res.data[i] = sigmoidVector(m.data[i], deriv);
-  }
+void sigmoidMatrix(Matrix *dst, Matrix m, bool deriv){
+  initMatrix(dst, m.shape[0], m.shape[1], false);
 
-  return res;
+  Vector v;
+  for(size_t i = 0; i < m.shape[0]; i++){
+    freeVector(dst->data[i]);
+    sigmoidVector(&v, m.data[i], deriv);
+    dst->data[i] = v;
+  }
 }
 
 

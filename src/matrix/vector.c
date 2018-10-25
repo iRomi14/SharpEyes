@@ -4,19 +4,16 @@
 
 #include "vector.h"
 
-Vector initVector(size_t size, bool random){
+void initVector(Vector *dst, size_t size, bool random){
 
-  Vector v;
-  v.size = size;
-  v.data = (double*) calloc(size, sizeof(double));
-  
+  dst->size = size;
+  dst->data = (double*) calloc(size, sizeof(double));
+
   if(random){
     for(size_t i = 0; i < size; i++){
-      v.data[i] = (double)rand()/RAND_MAX*2.0-1.0;;
+      dst->data[i] = (double)rand()/RAND_MAX*2.0-1.0;;
     }
   }
-  
-  return v;
 }
 
 void printVector(Vector v){
@@ -39,43 +36,37 @@ void freeVector(Vector v){
   free(v.data);
 }
 
-Vector addVector(Vector a, Vector b){
+void addVector(Vector *dst, Vector a, Vector b){
   if(a.size != b.size)
-    return initVector(0, false);
+    return;
 
   size_t size = a.size;
-  Vector res = initVector(size, false);
+  initVector(dst, size, false);
 
   for(size_t i = 0; i < size; i++){
-    res.data[i] = a.data[i] + b.data[i];
+    dst->data[i] = a.data[i] + b.data[i];
   }
-  
-  return res;
 }
 
 
-Vector scalarVector(Vector v, double s){
-  Vector res = initVector(v.size, false);
-  
+void scalarVector(Vector *dst, Vector v, double s){
+  initVector(dst, v.size, false);
+
   for(size_t i = 0; i < v.size; i++){
-    res.data[i] = s*v.data[i];
+    dst->data[i] = s*v.data[i];
   }
-  
-  return res;
 }
 
-Vector multVector(Vector a, Vector b){
+void multVector(Vector *dst, Vector a, Vector b){
   if(a.size != b.size)
-    return initVector(0, false);
+    return;
 
   size_t size = a.size;
-  Vector res = initVector(size, false);
+  initVector(dst, size, false);
 
   for(size_t i = 0; i < size; i++){
-    res.data[i] = a.data[i] * b.data[i];
+    dst->data[i] = a.data[i] * b.data[i];
   }
-
-  return res;
 }
 
 double sigmoid(double x, bool deriv){
@@ -84,14 +75,12 @@ double sigmoid(double x, bool deriv){
   return 1/(1+exp(-x));
 }
 
-Vector sigmoidVector(Vector v, bool deriv){
-  Vector res = initVector(v.size, false);
+void sigmoidVector(Vector *dst, Vector v, bool deriv){
+  initVector(dst, v.size, false);
 
-  for(size_t i = 0; i < res.size; i++){
-    res.data[i] = sigmoid(v.data[i], deriv);
+  for(size_t i = 0; i < v.size; i++){
+    dst->data[i] = sigmoid(v.data[i], deriv);
   }
-
-  return res;
 }
 
 
@@ -102,4 +91,3 @@ double meanVector(Vector v){
   }
   return mean/v.size;
 }
-
