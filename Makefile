@@ -14,11 +14,11 @@ src/main.o: src/main.c
 src/pixel_operations.o: src/pixel/pixel_operations.c
 	$(CC) -o src/pixel_operations.o -c src/pixel/pixel_operations.c $(CFLAGS) $(SDLFLAGS)
 
-src/to_binarize.o: src/to_binarize.c
-	$(CC) -o src/to_binarize.o -c src/to_binarize.c $(CFLAGS) $(SDLFLAGS)
+src/to_binarize.o: src/image_manipulation/to_binarize.c
+	$(CC) -o src/to_binarize.o -c src/image_manipulation/to_binarize.c $(CFLAGS) $(SDLFLAGS)
 
-src/decoupage.o: src/decoupage_blocs/decoupage.c src/matrix.o src/vector.o
-	$(CC) -o src/decoupage.o src/matrix.o src/vector.o -c src/decoupage_blocs/decoupage.c $(CFLAGS) $(SDLFLAGS) $(MATHFLAGS)
+src/decoupage.o: src/decoupage/decoupage.c src/matrix.o src/vector.o
+	$(CC) -o src/decoupage.o src/matrix.o src/vector.o -c src/decoupage/decoupage.c $(CFLAGS) $(SDLFLAGS) $(MATHFLAGS)
 
 xornn: src/xor.o src/matrix.o src/vector.o src/nn.o
 	$(CC) -o xornn src/xor.o src/matrix.o src/vector.o src/nn.o $(MATHFLAGS)
