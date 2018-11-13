@@ -32,70 +32,9 @@ DOWN L                            DOWN R
 //****************************** R L S A ***************************************//
 //******************************************************************************//
 
-// Process an 1D array
-/*void rlsa ( int *tabBin[] , size_t seuil )
-{
-  size_t i = 0;
-  size_t taille = sizeof(*tabBin);
-  size_t mem = 0;
-  size_t j = 0;
-  while ( i < taille)
-  {
-    if (tabBin[i] == 0)
-    {
-      while ( tabBin[i] == 0 )
-      {
-        mem = mem + 1;
-        i = i + 1;
-        if ( i >= taille )
-        {
-          break;
-        }
-      }
-      if ( mem <= seuil )
-      {
-        i = i - mem;
-        for (size_t j = i; j < i + mem; j++)
-        {
-          *tabBin[j] = 0;
-        }
-        i = j;
-      }
-    }
-    i = i + 1;
-    mem = 0;
-  }
-}*/
-
- //Process an 2D array = array of the binarised image give at the beginning
- /*void rlsaALL ( int **tabBin, int seuil )
-  {
-    size_t total = sizeof(tabBin);
-    size_t column = sizeof(tabBin[0]);
-    size_t row = total / column;
-
-    //HORIZONTAL RUN
-    for (size_t y = 0; y < column; y++)
-    {
-      rlsa( tabBin[(int)y], (size_t) seuil);
-    }
-
-    // VERTICAL RUN
-    // DO NOT WORK
-    // rlsa can't be used with this layout
-    for (size_t x = 0; x < row; x++)
-    {
-      for (size_t y = 0; y < column; y ++)
-      {
-        rlsa( tabBin[(int)y][(int)x] , (size_t) seuil);
-      }
-    }
-  }*/
-
 //******************************************************************************//
 //************** FROM BLOCK TO THE COORDINATE OF THE CORNERS *******************//
 //******************************************************************************//
-
 
 /*
 int BlackBoxesProcessing ( int tabBB[][] ; int tabB[][]  )
@@ -122,70 +61,125 @@ int BlackBoxesProcessing ( int tabBB[][] ; int tabB[][]  )
     }
   }
 
-}
-
-*/
+}*/
 
 //******************************************************************************//
 //********************** DETECTION OF WHITE LINES ******************************//
 //******************************************************************************//
 
-Matrix matrix_ligne(Matrix enter_matrix){
+SDL_Surface* lines(SDL_Surface* img)
+{
+	int w = img -> w;        // Largeur de l'image.(=nombre de pixel en largeur)
+	int h = img -> h;        // Hauteur de l'image.(=nombre de pixel en hauteur)
+	Uint8 r , g , b;         // Uint8 = nombres signés de 0 à 255 inclue.
+  int line = 0;            // Marque la présence de la ligne, ici (au début) il n'y en a pas. Nous sert de booléen pour la suite.
+	int black = 0;           // Marque la présence du pixel noir.
+	int begin;               // Ligne du début de la présence du pixel noir.
+	int end;                 // Ligne de la fin de la présence du pixel noir.
+	SDL_Surface* ligne_img = img;
 
-  size_t row = enter_matrix.shape[0];
+	for (int y = 0; y < h; y++){        // Parcours des lignes.
+		for (int x = 0; x < w; x++){      // Parcours des colonnes.
+			Uint32 pixel = get_pixel(ligne_img, x, y);
+			SDL_GetRGB(pixel, ligne_img->format, &r, &g, &b);
 
-  Matrix final;
-  initMatrix(&final,row, 1, false);
+			if (!r){      // Si le pixel est noir.
+				black = 1;  // Black = True.
+				break;      // Sortir de la boucle.
+			}
+		}
 
-  for(size_t x = 0; x < row; x++){
-    int count = 0;
+		if (black && !line){  // Si la ligne a des pixels noirs.
+			line = 1;           // Line = True.
+			begin = y;          // On conserve l'index de la ligne.
 
-    for(size_t y = 0; y < enter_matrix.data[x].size; y++){
+			for (int x = 0; x < w; x++){
+        Uint32 pixel = get_pixel(ligne_img, x, y);
+				int pos = y - 1;   // Précédente ligne.
+				if (pos >= 0){     // Vérifie si la hauteure de la ligne précédente est positive.
+					pixel = SDL_MapRGB(ligne_img->format, 255, 0, 0);  //Change la couleur de la ligne précédente. (ROUGE)
+	        put_pixel(ligne_img, x, pos, pixel);
+				}
+			}
+		}
 
-      if (enter_matrix.data[x].data[y] == 0)
-        count++;
-    }
+		if (!black && line){    // Si la ligne précédente a des pixels noirs mais maintenant c'est blanc.
+			line = 0;             // Line = False
+			end = y;              // Conserve l'index de la fin de ligne.
 
-    if(count != 0){
-      final.data[x].data[0] = 1;
-    }
-
-    else{
-      final.data[x].data[0] = 0;
-    }
-  }
-  return final;
-
+      for (int x = 0; x < w; x++){
+	      Uint32 pixel = get_pixel(ligne_img, x, y);
+				int pos = y + 1;      // Ligne suivante
+        if (pos < h){         // Verifie si la prochaine ligne peux être atteinte.
+          pixel = SDL_MapRGB(ligne_img->format, 255, 0, 0); //(ROUGE)
+          put_pixel(ligne_img, x, pos, pixel);
+        }
+      }
+			ligne_img = columns(ligne_img, begin, end);
+		}
+		black = 0;    //Black = False.
+	}
+	return ligne_img;
 }
 
-//******************************************************************************//
-//*********************** BMP TO MATRIX OF PIXEL *******************************//
-//******************************************************************************//
 
-Matrix bmp_to_matrix(SDL_Surface *image_surface){
+SDL_Surface* columns(SDL_Surface* img, int b_line, int e_line)
+{
+	int w = img -> w;            // Largeur de l'image.(=nombre de pixel en largeur)
+	Uint8 r , g , b;             // Uint8 = nombres signés de 0 à 255 inclue.
+	int end_c = 0;               // Marque la fin d'une rencontre avec une lettre.(= un caractère)
+	int black = 0;               // Trace la première ligne du caractère.
+	int e_black = 0;             // trace la dernière ligne du caractère.
+	int white = 0;               // SI toutes les colonnes sont blanches.
+	SDL_Surface* c_img = img;
 
-  size_t width = (size_t)image_surface->w; //je recupère la largeur de l'image soit le nombre de pixel en largeur.
+	for(int x = 0; x < w; x++){               // Parcours des colonnes
+		white = 1;
+		for(int y = b_line; y < e_line; y++){   // Parcours des lignes.
 
-  size_t height = (size_t)image_surface->h; //je recupère la hauteur de l'image soit le nombre de pixel en hauteur.
+			Uint32 pixel = get_pixel(c_img, x, y);
+      SDL_GetRGB(pixel, c_img->format, &r, &g, &b);
 
-  Matrix final;
-  initMatrix(&final,height, width, false); // j'initialise une matrice de hauteur par largeur.
+			if (!r && !end_c)// Première rencontre avec un caractère.
+			{
+				end_c = 1;  // Le début du caractère est là.
+				black = 1;  // On doit tracer la première ligne.
+				break;
+			}
 
-  for (size_t x = 0 ; x < width; x++) {
-    for (size_t y = 0; y < height; y++) { //je parcour mes pixels un par un.
+			if(!r){     // Si le caractère n'est pas encore fini.
+				white = 0;
+				break;
+			}
+			// had encountered a character but now it's its end with y,
+			// also verify if this column has not black pixel with the white satement
+			if (b == 255 && end_c && white && y == e_line - 1)
+			{
+				end_c = 0;  // La fin du caractère est là.
+				e_black = 1;// On doit tracer la dernière ligne.
+				break;
+			}
+		}
 
-      Uint32 pixel = get_pixel(image_surface,x,y); // je recupère un pixel.
-      Uint8 r, g, b;
-      SDL_GetRGB(pixel, image_surface->format, &r, &g, &b); // je recupère ces valeur R G B.
+		if (end_c && black){  // Coloré la précédente colonne du caractère.
+			black = 0;
+			for (int y = b_line; y < e_line; y++){
+				if (x - 1 > 0){//previous column
+          Uint32 pixel = SDL_MapRGB(c_img->format, 0, 0, 255); //Change la couleur de la colonne.(BLEU)
+          put_pixel(c_img, x - 1, y, pixel);
+        }
+			}
+		}
 
-      if (r == 255) //blanc
-        final.data[y].data[x] = -1; //si c'est un pixel blanc je met ca valeur à 1.
-
-      if (r == 0) //noir
-        final.data[y].data[x] = 1;//si c'est un pixel noir je met ca valeur à 0.
-    }
+		if (!end_c && e_black){   // color the next column of the caracter
+			e_black = 0;            // last line was traced, so make back the statement
+			for (int y = b_line; y < e_line; y++){
+        Uint32 pixel = SDL_MapRGB(c_img->format, 0, 0, 255); //Change la couleur de la colonne. (BLEU)
+        put_pixel(c_img, x, y, pixel);
+			}
+		}
   }
-  return final;
+	return c_img;
 }
 
 //******************************************************************************//

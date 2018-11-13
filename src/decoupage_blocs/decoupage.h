@@ -3,12 +3,7 @@
 
 # include "../matrix/matrix.h"
 
-void rlsa ( int *tabBin[] , size_t seuil );
-
-void rlsaALL ( int **tabBin, int seuil );
-
-Matrix bmp_to_matrix(SDL_Surface *image_surface);
-
-Matrix matrix_ligne(Matrix enter_matrix);
+SDL_Surface* lines(SDL_Surface* img);
+SDL_Surface* columns(SDL_Surface *img, int b_line, int e_line);
 
 #endif
