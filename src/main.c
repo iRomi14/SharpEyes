@@ -15,8 +15,8 @@
 	gcc test.c -o exec -I SDL/include -L SDL/lib64 -lmingw64 -lSDL2main -lSDL2
 */
 
-#define WIDTH 800
-#define HEIGHT 600
+#define WIDTH 1024
+#define HEIGHT 768
 #define XTIME 500
 
 void SDL_ExitError(const char *message);
@@ -60,7 +60,7 @@ int main(){
 	SDL_Surface *image;
 	SDL_Texture *texture;
 
-	image = SDL_LoadBMP("exemples/signpassage.bmp");
+	image = SDL_LoadBMP("exemples/test2.bmp");
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
@@ -68,21 +68,7 @@ int main(){
 	//----------------- Application des fonctions sur l'image -----------------//
 
 	to_binarize(image);
-
-	Matrix matrix_image = bmp_to_matrix(image);
-
-	Matrix ligne = matrix_ligne(matrix_image);
-
-	// ------------------- Print la matrix --------------------//
-
-	for(size_t x = 0; x < ligne.shape[0]; x++){
-		printf("[ ");
-		for(size_t y = 0; y < ligne.data[x].size; y++){
-
-				printf("%lf ", ligne.data[x].data[y]);
-		}
-		printf("]\n");
-	}
+	lines(image);
 
 	//-------------------------------------------------------------------------//
 
