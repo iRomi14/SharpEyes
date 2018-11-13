@@ -3,8 +3,8 @@
 # include <SDL.h>
 
 # include "pixel/pixel_operations.h"
-# include "to_binarize.h"
-# include "decoupage_blocs/decoupage.h"
+# include "image_manipulation/to_binarize.h"
+# include "decoupage/decoupage.h"
 # include "matrix/matrix.h"
 
 /*
@@ -60,7 +60,7 @@ int main(){
 	SDL_Surface *image;
 	SDL_Texture *texture;
 
-	image = SDL_LoadBMP("exemples/test2.bmp");
+	image = SDL_LoadBMP("Banque Image/words/test2.bmp");
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
