@@ -1,5 +1,3 @@
-
-
 #include "matrix.h"
 
 void initMatrix(Matrix *dst, size_t l, size_t m, bool random){
