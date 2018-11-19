@@ -151,8 +151,7 @@ SDL_Surface* columns(SDL_Surface* img, int b_line, int e_line)
 				white = 0;
 				break;
 			}
-			// had encountered a character but now it's its end with y,
-			// also verify if this column has not black pixel with the white satement
+
 			if (b == 255 && end_c && white && y == e_line - 1)
 			{
 				end_c = 0;  // La fin du caractère est là.
@@ -185,6 +184,35 @@ SDL_Surface* columns(SDL_Surface* img, int b_line, int e_line)
 //******************************************************************************//
 //******************** DETECTION OF CHARACTERS ********************************//
 //******************************************************************************//
+
+/*SDL_Surface* list_of_characters(SDL_Surface* img)
+{
+	int width = img -> w;
+	int height = img -> h;
+	size_t index = 0;
+	Matrix list_of_matrix[];
+
+  for (size_t x = 0; x < width; x++) {
+  	for (size_t y = 0; y < height; y++) {
+			Uint32 pixel = get_pixel(img,x,y);
+      Uint8 r, g, b;
+      SDL_GetRGB(pixel, img->format, &r, &g, &b);
+			if (r == 255 && g == 0 && b == 0)
+			{
+				Uint32 pixel_above = get_pixel(img,x,y+1);
+				Uint8 r, g, b;
+				SDL_GetRGB(pixel_above, img->format, &r, &g, &b);
+				if (r == 255 && g == 0 && b == 255){}
+			}
+  	}
+  }
+
+
+	Matrix matrix;
+  initMatrix(&matrix,height, width, false); // j'initialise une matrice de hauteur par largeur.
+	return list_of_matrix;
+}*/
+
 
 //******************************************************************************//
 //******************** ADJUSTEMENT OF CHARACTERS *******************************//
