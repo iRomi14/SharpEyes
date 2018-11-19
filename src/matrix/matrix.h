@@ -10,7 +10,8 @@ struct Matrix {
 
 typedef struct Matrix Matrix;
 
-void initMatrix(Matrix *des, size_t l, size_t m, bool random);
+void initMatrix(Matrix *dst, size_t l, size_t m, bool random);
+void loadMatrix(Matrix *dst, char *in);
 
 void printMatrix(Matrix m);
 void writeMatrix(FILE *out, Matrix m);

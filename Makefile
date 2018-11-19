@@ -1,6 +1,6 @@
 CC=gcc
 
-CFLAGS= -Wall -Wextra -Werror -std=c99 -O1
+CFLAGS= -Wall -Wextra  -std=c99 -O1
 MATHFLAGS= -lm
 SDLFLAGS = -I/usr/include/SDL2 -D_REENTRANT -L/usr/lib/x86_64-linux-gnu -lSDL2
 
@@ -22,6 +22,13 @@ src/decoupage.o: src/decoupage_blocs/decoupage.c src/matrix.o src/vector.o
 
 xornn: src/xor.o src/matrix.o src/vector.o src/nn.o
 	$(CC) -o xornn src/xor.o src/matrix.o src/vector.o src/nn.o $(MATHFLAGS)
+
+ocrnn: src/ocrnn.o src/matrix.o src/vector.o src/nn.o
+	$(CC) -o ocrnn src/ocrnn.o src/matrix.o src/vector.o src/nn.o $(MATHFLAGS)
+
+
+src/ocrnn.o: src/ocrnn.c
+	$(CC) -o src/ocrnn.o -c src/ocrnn.c $(CFLAGS)
 
 src/xor.o: src/xor.c
 	$(CC) -o src/xor.o -c src/xor.c $(CFLAGS)

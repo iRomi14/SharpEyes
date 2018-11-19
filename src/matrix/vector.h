@@ -1,10 +1,13 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#define _GNU_SOURCE
+#include <string.h>
 #include <stdbool.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 struct Vector {
 	size_t size;
@@ -15,15 +18,11 @@ typedef struct Vector Vector;
 
 
 void initVector(Vector *dst, size_t size, bool random);
+void loadVector(Vector *dst, char *in, size_t size);
 
 void printVector(Vector v);
 void writeVector(FILE *out, Vector v);
 void freeVector(Vector v);
-
-/*	Matrix Operators
-	reuse = true : b = a operator b
-	reuse = false : c = a operator b (attention a free les matrices)
-*/
 
 void addVector(Vector *dst, Vector a, Vector b);
 void scalarVector(Vector *dst, Vector v, double s);

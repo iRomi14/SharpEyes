@@ -1,5 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
+
 
 #include "matrix.h"
 
@@ -15,6 +14,29 @@ void initMatrix(Matrix *dst, size_t l, size_t m, bool random){
   }
 }
 
+void loadMatrix(Matrix *dst, char *in){
+  char *token;
+
+  size_t l = (size_t)strtoul(in, &token, 10);
+  size_t m = (size_t)strtoul(token+1, &token, 10);
+
+  printf("%zu x %zu\n", l, m);
+
+  initMatrix(dst, l, m, false);
+
+  token = strtok_r(in, "\n", &in);
+
+  Vector v;
+  for(size_t i = 0; i < l; i++){
+    token = strtok_r(in, "\n", &in);
+
+    freeVector(dst->data[i]);
+    loadVector(&v, token, m);
+    //printf("\n");
+    dst->data[i] = v;
+  }
+}
+
 void printMatrix(Matrix m){
   for(size_t i = 0; i < m.shape[0]; i++){
     printVector(m.data[i]);
@@ -26,7 +48,7 @@ void writeMatrix(FILE *out, Matrix m){
   for(size_t i = 0; i < m.shape[0]; i++){
     writeVector(out, m.data[i]);
   }
-  fprintf(out, "}\n");
+  fprintf(out, "}");
 }
 
 void freeMatrix(Matrix m){

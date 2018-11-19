@@ -17,4 +17,6 @@ void freeNeuralNet(NN neuralNet);
 
 void saveWeights(NN neuralNet, char *saveFile);
 
+void loadWeights(NN *neuralNet, char *loadFile);
+
 #endif

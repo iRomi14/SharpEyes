@@ -77,7 +77,43 @@ void saveWeights(NN neuralNet, char *saveFile){
 	fp=fopen(saveFile, "w");
 
 	for(size_t i = 0; i < neuralNet.layers; i++){
-	    writeMatrix(fp, neuralNet.weights[i]);
+    writeMatrix(fp, neuralNet.weights[i]);
+    if(i < neuralNet.layers - 1)
+      fprintf(fp, ",\n");
 	}
 	fclose(fp);
+}
+
+void loadWeights(NN *neuralNet, char *loadFile){
+  FILE *fp;
+  fp=fopen(loadFile, "r");
+
+  char * file;
+  size_t len = 0;
+
+  fseek(fp, 0L, SEEK_END);
+  len = ftell(fp);
+
+  rewind(fp);
+
+  file = (char*)calloc(len, sizeof(char));
+
+  fread(file, len, sizeof(char), fp);
+
+  char *token;// = strtok_r(file, ",",  &file);
+  char *in;
+  int i = 0;
+
+  while((token = strtok_r(file, ",", &file))){
+
+    in = (char*) calloc(strlen(token)+1, sizeof(char));
+    strcpy(in, token);
+
+    loadMatrix(&(neuralNet->weights[i]), in);
+    //printf("\n");
+    
+    free(in);
+    i++;
+  }
+  fclose(fp);
 }

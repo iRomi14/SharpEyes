@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-
 #include "vector.h"
 
 void initVector(Vector *dst, size_t size, bool random){
@@ -13,6 +9,18 @@ void initVector(Vector *dst, size_t size, bool random){
     for(size_t i = 0; i < size; i++){
       dst->data[i] = (double)rand()/RAND_MAX*2.0-1.0;;
     }
+  }
+}
+
+void loadVector(Vector *dst, char *in, size_t size){
+  initVector(dst, size, false);
+
+  char *token = strtok_r(in, " ", &in);
+
+  for(size_t i = 0; i < size; i++){
+    token = strtok_r(in, " ", &in);
+    //printf("%s  ", token);
+    sscanf(token, "%lf", &(dst->data[i]));
   }
 }
 
@@ -71,7 +79,7 @@ void multVector(Vector *dst, Vector a, Vector b){
 
 double sigmoid(double x, bool deriv){
   if(deriv)
-    return x*(1-x);
+    return sigmoid(x, false)*(1-sigmoid(x, false));
   return 1/(1+exp(-x));
 }
 
