@@ -4,8 +4,10 @@
 
 # include "pixel/pixel_operations.h"
 # include "image_manipulation/to_binarize.h"
+# include "image_manipulation/SDL_functions.h"
 # include "decoupage/decoupage.h"
 # include "matrix/matrix.h"
+
 
 /*
 	Installation : sudo apt-get install libsdl2-dev
@@ -15,14 +17,9 @@
 	gcc test.c -o exec -I SDL/include -L SDL/lib64 -lmingw64 -lSDL2main -lSDL2
 */
 
-#define WIDTH 1024
-#define HEIGHT 768
+#define WIDTH 1920
+#define HEIGHT 1080
 #define XTIME 500
-
-void SDL_ExitError(const char *message);
-void SDL_ExitSupress(const char *message, SDL_Renderer *renderer, SDL_Window *fenetre);
-void PressedKey(void);
-
 
 int main(){
 
@@ -66,9 +63,10 @@ int main(){
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
 
 	//----------------- Application des fonctions sur l'image -----------------//
-
-	to_binarize(image);
+	otsu(image);
+	printf("Binarize, done!\n");
 	lines(image);
+	printf("Detect text, done !\n");
 
 	//-------------------------------------------------------------------------//
 
@@ -105,23 +103,4 @@ int main(){
 	SDL_Quit();
 
 	return 0;
-}
-
-void SDL_ExitError(const char *message){
-	SDL_Log("Error : %s : %s\n", message, SDL_GetError());
-	SDL_Quit();
-	exit(EXIT_FAILURE);
-}
-
-void SDL_ExitSupress(const char *message, SDL_Renderer *renderer, SDL_Window *fenetre){
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(fenetre);
-	SDL_ExitError(message);
-}
-
-void PressedKey(void){
-	SDL_Event event;
-	do{
-		SDL_PollEvent(&event);
-	}while(event.type != SDL_KEYDOWN);
 }
