@@ -99,3 +99,12 @@ double meanVector(Vector v){
   }
   return mean/v.size;
 }
+
+int argmax(Vector v){
+  int max = 0;
+  for(size_t i = 0; i < v.size; i++){
+    if(v.data[i] > v.data[max])
+      max = i;
+  }
+  return max;
+}

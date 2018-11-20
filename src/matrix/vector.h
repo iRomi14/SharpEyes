@@ -33,4 +33,6 @@ void sigmoidVector(Vector *dst, Vector v, bool deriv);
 
 double meanVector(Vector v);
 
+int argmax(Vector v);
+
 #endif

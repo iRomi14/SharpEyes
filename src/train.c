@@ -11,7 +11,9 @@
 #include "neural_net/nn.h"
 
 #define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-#define saveFile "ocr_weights.se"
+#define saveFile "ocr_weights_light.se"
+
+#define HLAYER 64
 
 void bmp_to_vector(Vector *dst, SDL_Surface *image_surface){
 
@@ -39,9 +41,19 @@ void bmp_to_vector(Vector *dst, SDL_Surface *image_surface){
   }
 }
 
-int main(){
+int main(int argc, char *argv[]){
+	srand (time(NULL));
 
   int EPOCHS = 10000;
+  size_t N = sizeof(ALPHABET)-1;
+  size_t variants = 1;
+
+  if(argc == 3){
+  	EPOCHS = atoi(argv[1]);
+  	variants = (size_t)atoi(argv[2]);
+  }
+
+  printf("Loading %zu Characters\n", N*variants);
 
   NN ocrNet;
   ocrNet.layers = 2;
@@ -49,8 +61,8 @@ int main(){
   ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
   ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
 
-  initMatrix(&ocrNet.weights[0], 784, 62, true);
-  initMatrix(&ocrNet.weights[1], 62, 62, true);
+  initMatrix(&ocrNet.weights[0], 784, HLAYER, true);
+  initMatrix(&ocrNet.weights[1], HLAYER, N, true);
   //initMatrix(&xorNet.weights[1], 64, , true);
 
   SDL_Surface *image;
@@ -58,36 +70,43 @@ int main(){
   char buffer[64];
 
   char train_dir[] = "Banque Image/training/";
-  char image_name[] = "0/arial.bmp";
+  char image_name[] = "x/xx.bmp";
 
   Matrix train_x;
   Matrix train_y;
 
-  initMatrix(&train_x, 62, 784, false);
-  initMatrix(&train_y, 62, 62, false);
+  initMatrix(&train_x, N*variants, 784, false);
+  initMatrix(&train_y, N*variants, N, false);
 
   Vector v;
 
-  for (unsigned int i = 0; i < sizeof(ALPHABET)-1; i++){
-    image_name[0] = ALPHABET[i];
-    strcpy(buffer, train_dir);
+  for (size_t i = 0; i < N; i++){
+    //image_name[0] = ALPHABET[i];
+   
     //printf("%s\n", strncat(buffer, image_name, 64));
-    image = SDL_LoadBMP(strncat(buffer, image_name, 64));
-    if (image == NULL)
-      exit(-1);
+    for(size_t j = 0; j < variants; j++){
 
-    train_y.data[i].data[i] = 1.0;
-    to_binarize(image);
-    bmp_to_vector(&v, image);
+      sprintf(image_name, "%c/%02zu.bmp", ALPHABET[i], j);
+      strcpy(buffer, train_dir);
 
-    //printVector(v);
-    //printf("\n\n");
+      //printf("%s\n", strncat(buffer, image_name, 64));
+      image = SDL_LoadBMP(strncat(buffer, image_name, 64));
+      if (image == NULL)
+        exit(-1);
 
-    train_x.data[i] = v;
+      train_y.data[i*variants+j].data[i] = 1.0;
+      to_binarize(image);
+      bmp_to_vector(&v, image);
+
+      train_x.data[i*variants+j] = v;
+    }
   }
 
   Matrix y_pred, error;
   Matrix tmp;
+
+  printf("Training for %d Epochs\n", EPOCHS);
+  printf("-------------------------\n");
 
   int j;
   for(j = 0; j < EPOCHS; j++){
@@ -113,4 +132,6 @@ int main(){
   printf("Weights saved in %s\n", saveFile);
 
   freeNeuralNet(ocrNet);
+
+  return 0;
 }

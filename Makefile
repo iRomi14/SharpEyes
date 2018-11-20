@@ -31,15 +31,15 @@ train: src/train.o src/pixel_operations.o src/to_binarize.o src/sdl_functions.o 
 xornn: src/xor.o src/matrix.o src/vector.o src/nn.o
 	$(CC) -o xornn src/xor.o src/matrix.o src/vector.o src/nn.o $(MATHFLAGS)
 
-ocrnn: src/ocrnn.o src/matrix.o src/vector.o src/nn.o
-	$(CC) -o ocrnn src/ocrnn.o src/matrix.o src/vector.o src/nn.o $(MATHFLAGS)
+ocrnn: src/ocrnn.o src/pixel_operations.o src/to_binarize.o src/sdl_functions.o src/decoupage.o src/matrix.o src/vector.o src/nn.o
+	$(CC) -o ocrnn src/ocrnn.o src/pixel_operations.o src/to_binarize.o src/sdl_functions.o src/decoupage.o src/matrix.o src/vector.o src/nn.o $(SDLFLAGS) $(MATHFLAGS)
 
 
 src/train.o: src/train.c
 	$(CC) -o src/train.o -c src/train.c $(CFLAGS) $(SDLFLAGS)
 
 src/ocrnn.o: src/ocrnn.c
-	$(CC) -o src/ocrnn.o -c src/ocrnn.c $(CFLAGS)
+	$(CC) -o src/ocrnn.o -c src/ocrnn.c $(CFLAGS) $(SDLFLAGS)
 
 src/xor.o: src/xor.c
 	$(CC) -o src/xor.o -c src/xor.c $(CFLAGS)
