@@ -6,7 +6,7 @@
 #include "matrix/matrix.h"
 #include "neural_net/nn.h"
 
-#define saveFile "weights.se"
+#define saveFile "xor_weights.se"
 
 int main(int argc, char *argv[]){
   srand (time(NULL));

@@ -3,15 +3,15 @@ import os
 
 train_dir = "training"
 
-alphabet= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
-fontname = "times"
+alphabet= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+fontname = "arial"
 
 for c in alphabet:
 	
     img = Image.new("RGB", (28,28), (255,255,255))
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype(os.path.join("fonts", fontname+".ttf"), size=30)
-    draw.text((4,0), c, font=font, fill=(0,0,0))
+    draw.text((4,-6), c, font=font, fill=(0,0,0))
     #img.show()
 
     save_dir = os.path.join(train_dir, c)
