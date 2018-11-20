@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-train_dir = "training"
+train_dir = "Banque Image/training"
 
 alphabet= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 fonts = ["PlayfairDisplay-Regular", "Roboto-Regular", "Slabo27px-Regular"]
@@ -11,7 +11,7 @@ for i in range(len(fonts)):
 
         img = Image.new("RGB", (28,28), (255,255,255))
         draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype(os.path.join("fonts", fonts[i]+".ttf"), size=30)
+        font = ImageFont.truetype(os.path.join("Banque Image/fonts", fonts[i]+".ttf"), size=30)
         draw.text((4,-6), c, font=font, fill=(0,0,0))
         #img.show()
 

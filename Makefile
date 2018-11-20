@@ -54,4 +54,4 @@ src/vector.o: src/matrix/vector.c
 	$(CC) -o src/vector.o -c src/matrix/vector.c $(CFLAGS)
 
 clean:
-	rm -rf */*.o
+	rm -rf src/*.o

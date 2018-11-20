@@ -11,7 +11,7 @@
 #include "neural_net/nn.h"
 
 #define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-#define saveFile "ocr_weights_light.se"
+#define saveFile "ocr_weights_2.se"
 
 #define HLAYER 64
 
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]){
       if (image == NULL)
         exit(-1);
 
-      train_y.data[i*variants+j].data[i] = 1.0;
+      train_y.data[i*variants+j].data[i] = 1.0; // one hot encoding
       to_binarize(image);
       bmp_to_vector(&v, image);
 
