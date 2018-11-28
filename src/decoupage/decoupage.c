@@ -92,10 +92,11 @@ void print_matrix(double mat[], size_t lines, size_t cols)
 				printf("[");
         for(size_t j = 0; j < cols; j++)
             printf("%d ", (int)mat[j + i * cols]);
-				printf("]");
-        printf("\n");
 
+	printf("]");
+        printf("\n");
     }
+    printf("\n");
 }
 
 SDL_Surface* increaseChar(SDL_Surface *img)
@@ -355,8 +356,8 @@ void isolateChar(SDL_Surface *img)
           }
           resize = increaseChar(copy);
           //Detect the chars
-					double *letter = create_matrix(resize);
-					print_matrix(letter, 28, 28);
+	  double *letter = create_matrix(resize);
+	  print_matrix(letter, 28, 28);
           //Prevent false space
           int space = 1;
           //printf("%d\n",copy->w);
@@ -382,7 +383,7 @@ void isolateChar(SDL_Surface *img)
               space = 0;
               break;
             }
-					}
+	  }
           /*if(space)
           {
 
