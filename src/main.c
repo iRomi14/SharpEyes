@@ -17,8 +17,8 @@
 	gcc test.c -o exec -I SDL/include -L SDL/lib64 -lmingw64 -lSDL2main -lSDL2
 */
 
-#define WIDTH 1920
-#define HEIGHT 1080
+#define WIDTH 1230
+#define HEIGHT 890
 #define XTIME 500
 
 int main(){
@@ -57,16 +57,20 @@ int main(){
 	SDL_Surface *image;
 	SDL_Texture *texture;
 
-	image = SDL_LoadBMP("Banque Image/words/test2.bmp");
+	image = SDL_LoadBMP("Banque Image/words/Lorem_2.bmp");
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
 
 	//----------------- Application des fonctions sur l'image -----------------//
+
 	otsu(image);
 	printf("Binarize, done!\n");
-	lines(image);
-	printf("Detect text, done !\n");
+	image = draw_lines(image);
+	printf("Line Cuts\n");
+	isolateLine(image);
+	printf("Finish Treatment\n");
+
 
 	//-------------------------------------------------------------------------//
 

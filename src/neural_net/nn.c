@@ -1,5 +1,7 @@
 #include "nn.h"
 
+double learning_rate = 0.2;
+
 Matrix forward(NN neuralNet, Matrix in){
   Matrix out = in;
   Matrix tmp;
@@ -47,16 +49,19 @@ void backward(NN neuralNet, Matrix error, Matrix in){
     dotMatrix(&error, delta, tmp);
     freeMatrix(tmp);
 
-    // weights[i] += delta *dot* prev_layer.T
+    // gradient_weight = delta *dot* prev_layer.T
     transpose(&tmp, prev);
     dotMatrix(&gradW, tmp, delta);
     freeMatrix(tmp);
 
-    addMatrix(&tmp, neuralNet.weights[i], gradW);
+    // weights[i] += learning_rate*gradient_weight
+    scalarMatrix(&tmp, gradW, learning_rate);
+    freeMatrix(gradW);
+    addMatrix(&gradW, neuralNet.weights[i], tmp);
     freeMatrix(neuralNet.weights[i]);
 
-    neuralNet.weights[i] = tmp;
-    freeMatrix(gradW);
+    neuralNet.weights[i] = gradW;
+    freeMatrix(tmp);
     freeMatrix(delta);
   }
   freeMatrix(error);
@@ -100,7 +105,7 @@ void loadWeights(NN *neuralNet, char *loadFile){
 
   fread(file, len, sizeof(char), fp);
 
-  char *token;// = strtok_r(file, ",",  &file);
+  char *token;
   char *in;
   int i = 0;
 
@@ -110,7 +115,6 @@ void loadWeights(NN *neuralNet, char *loadFile){
     strcpy(in, token);
 
     loadMatrix(&(neuralNet->weights[i]), in);
-    //printf("\n");
     
     free(in);
     i++;

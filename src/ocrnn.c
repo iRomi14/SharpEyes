@@ -11,7 +11,7 @@
 #include "neural_net/nn.h"
 
 #define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-#define saveFile "ocr_weights_light.se"
+#define saveFile "ocr_weights_2.se"
 
 void bmp_to_vector(Vector *dst, SDL_Surface *image_surface){
 
@@ -108,8 +108,8 @@ int main(int argc, char *argv[]){
     y = argmax(train_y.data[i]);
     if(argmax(y_pred.data[i]) == argmax(train_y.data[i]))
       success++;
-
-    printf("%zu : %c (true : %c)\n", i, ALPHABET[y_hat], ALPHABET[y]);
+    else
+      printf("[F] %c (true : %c)\n", ALPHABET[y_hat], ALPHABET[y]);
 
   }
      

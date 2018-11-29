@@ -5,7 +5,7 @@
 #include "pixel/pixel_operations.h"
 #include "image_manipulation/to_binarize.h"
 #include "image_manipulation/SDL_functions.h"
-#include "decoupage/decoupage.h"
+//#include "decoupage/decoupage.h"
 #include "matrix/matrix.h"
 
 #include "neural_net/nn.h"
