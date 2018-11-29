@@ -55,6 +55,25 @@ void print_matrix(double mat[], size_t lines, size_t cols)
     printf("\n");
 }
 
+int isSpace(SDL_Surface* img)
+{
+  Uint32 pixel;
+  Uint8 r, g, b;
+  int space = 1;
+  for (int y = 0; y< img -> h; y++) {
+    for (int x = 0; x < img -> w; x++) {
+      pixel = get_pixel(img, x, y);
+      SDL_GetRGB(pixel, img -> format, &r, &g, &b);
+      if(r == 0 && g == 0 && b == 0)
+      {
+        space = 0;
+        break;
+      }
+    }
+  }
+  return space;
+}
+
 void bmp_to_vector(Vector *dst, SDL_Surface *image_surface){
 
   size_t width = (size_t)image_surface->w; //je recupère la largeur de l'image soit le nombre de pixel en largeur.
@@ -217,7 +236,7 @@ void draw_sperate_char(SDL_Surface *img)
     if(thereIsChar && !canCut)
     {
       for(int k = 0; k < img -> h; k++){
-        pixel = SDL_MapRGB(img -> format, 0, 0, 255);
+        pixel = SDL_MapRGB(img -> format, 255, 0, 0);
         put_pixel(img, i - 1, k, pixel);
       }
       canCut = 1;
@@ -276,13 +295,16 @@ void isolateChar(SDL_Surface *img)
               put_pixel(copy, w, h, pixel);
             }
           }
-          SDL_Surface *resize = Resize(copy);
-          //Détecter la lettre.
-          /*Vector v;
-          bmp_to_vector(&v, resize);
-          printVector(v);*/
-          double *letter = create_matrix(resize);
-          print_matrix(letter, 28, 28);
+          if(copy -> w > 5 || (isSpace(copy) == 0))
+          {
+            SDL_Surface *resize = Resize(copy);
+            //Détecter la lettre.
+            /*Vector v;
+            bmp_to_vector(&v, resize);
+            printVector(v);*/
+            double *letter = create_matrix(resize);
+            print_matrix(letter, 28, 28);
+          }
           break;
         }
       }

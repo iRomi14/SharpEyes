@@ -14,6 +14,8 @@ double *create_matrix(SDL_Surface *image_surface);
 
 void print_matrix(double mat[], size_t lines, size_t cols);
 
+int isSpace(SDL_Surface* img);
+
 //*********************************************************************//
 //******************* DETECTION OF WHITE LINES ************************//
 //*********************************************************************//
