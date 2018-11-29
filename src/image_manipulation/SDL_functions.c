@@ -18,3 +18,32 @@ void PressedKey(void){
 		SDL_PollEvent(&event);
 	}while(event.type != SDL_KEYDOWN);
 }
+
+SDL_Surface* copy_image(SDL_Surface *img)
+{
+  Uint32 pixel;
+  SDL_Surface* copy;
+  copy = SDL_CreateRGBSurface(0,
+                              img -> w,
+                              img -> h,
+                              img -> format -> BitsPerPixel,0,0,0,0);
+  for(int x = 0; x < img -> w; x++)
+  {
+    for(int y = 0; y < img -> h; y++)
+    {
+      pixel = get_pixel(img, x, y);
+      put_pixel(copy, x, y, pixel);
+    }
+  }
+  return(copy);
+}
+
+SDL_Surface* Resize(SDL_Surface *img)
+{
+  SDL_Surface *dest = SDL_CreateRGBSurface(SDL_SWSURFACE,
+                        28,
+                        28,
+                        img->format->BitsPerPixel,0,0,0,0);
+  SDL_SoftStretch(img, NULL, dest, NULL);
+  return dest;
+}
