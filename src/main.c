@@ -57,7 +57,7 @@ int main(){
 	SDL_Surface *image;
 	SDL_Texture *texture;
 
-	image = SDL_LoadBMP("Banque Image/words/txtWhiteOnBlack.bmp");
+	image = SDL_LoadBMP("Banque Image/words/wordsepita.bmp");
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
