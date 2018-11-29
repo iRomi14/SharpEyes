@@ -57,7 +57,7 @@ int main(){
 	SDL_Surface *image;
 	SDL_Texture *texture;
 
-	image = SDL_LoadBMP("Banque Image/words/Lorem_2.bmp");
+	image = SDL_LoadBMP("Banque Image/words/txtWhiteOnBlack.bmp");
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
@@ -66,6 +66,7 @@ int main(){
 
 	otsu(image);
 	printf("Binarize, done!\n");
+	inverse(image);
 	image = draw_lines(image);
 	printf("Line Cuts\n");
 	isolateLine(image);
