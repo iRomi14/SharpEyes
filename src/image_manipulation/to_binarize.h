@@ -11,4 +11,6 @@ int getThreshold(int *histo, int total);
 
 void otsu(SDL_Surface *img);
 
+void inverse (SDL_Surface *img);
+
 #endif

@@ -106,7 +106,51 @@ void otsu(SDL_Surface *img)
                 put_pixel(img, i, j, SDL_MapRGB(img->format, 255,255,255));
             else
                 put_pixel(img, i, j, SDL_MapRGB(img->format, 0,0,0));
-
         }
     }
+}
+
+void inverse (SDL_Surface *img)
+{
+	int pixBlanc = 0;
+	int pixNoir = 0;
+	Uint32 pix;
+    Uint8 r, g, b;
+    
+    for (int i = 0; i < img->w; ++i)
+	{
+		for (int j = 0; j < img->h; ++j)
+		{
+			pix = get_pixel(img, i, j);
+            SDL_GetRGB(pix, img->format, &r, &g, &b);
+			
+			if ( r == 255)
+			{
+				pixBlanc += 1;
+			}
+			if ( r == 0)
+			{
+				pixNoir += 1;
+			}
+		}
+	}
+
+	if ( pixNoir > pixBlanc)
+	{
+		printf("Colors have been inversed!\n");
+		for (int i = 0; i < img->w; ++i)
+		{
+		    for (int j = 0; j < img->h; ++j)
+		                    {
+            pix = get_pixel(img, i, j);
+            SDL_GetRGB(pix, img->format, &r, &g, &b);
+
+            if (r == 255)
+                put_pixel(img, i, j, SDL_MapRGB(img->format, 0,0,0));
+            else
+            	put_pixel(img, i, j, SDL_MapRGB(img->format, 255,255,255));
+        	}
+        }
+
+	}
 }
