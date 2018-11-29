@@ -29,9 +29,6 @@ void transpose(Matrix *dst, Matrix m);
 
 void sigmoidMatrix(Matrix *dst, Matrix m, bool deriv);
 
-//Vector absVector(Vector v);
-//Matrix absMatrix(Matrix m);
-
 double meanMatrix(Matrix m);
 
 #endif
