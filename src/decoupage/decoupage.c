@@ -182,7 +182,7 @@ void cutSurface(SDL_Surface *img, int firstCut,int lastCut)
     }
   }
   //Cut the characters
-  charCut(copy);
+  draw_sperate_char(copy);
   isolateChar(copy);
 }
 
@@ -191,7 +191,7 @@ void cutSurface(SDL_Surface *img, int firstCut,int lastCut)
 //******************************************************************************//
 
 /* Cut the characters into the isolated cuts */
-void charCut(SDL_Surface *img)
+void draw_sperate_char(SDL_Surface *img)
 {
   /*Variables*/
   Uint32 pixel;

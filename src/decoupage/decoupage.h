@@ -28,7 +28,7 @@ void cutSurface(SDL_Surface *img, int firstCut, int lastCut);
 //******************** ADJUSTEMENT OF CHARACTERS *******************************//
 //******************************************************************************//
 
-void charCut(SDL_Surface *img);
+void draw_sperate_char(SDL_Surface *img);
 
 void isolateChar(SDL_Surface *img);
 
