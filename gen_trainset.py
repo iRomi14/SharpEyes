@@ -8,10 +8,11 @@ alphabet= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 #fonts = ["PlayfairDisplay-Regular", "Roboto-Regular", "Slabo27px-Regular"]
 
 #for i in range(len(fonts)):
+print("[+] Generating training set in '{}'".format(train_dir))
 i = 0
 for font in os.listdir(fonts_dir):
     if font[0] != '.':
-        print(font)
+        #print(font)
         for c in alphabet:
 
             img = Image.new("RGB", (28,28), (255,255,255))
@@ -25,3 +26,6 @@ for font in os.listdir(fonts_dir):
                 os.makedirs(save_dir)
             img.save(os.path.join(save_dir, '{:02}.bmp'.format(i)))
         i+=1
+
+
+print("[+] Used {} different fonts".format(i))

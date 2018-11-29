@@ -28,7 +28,7 @@ void backward(NN neuralNet, Matrix error, Matrix in){
   Matrix delta, prev;
   Matrix tmp, gradW;
 
-  for(int i = (int)neuralNet.layers-1; i >= 0; i--){ 
+  for(int i = (int)neuralNet.layers-1; i >= 0; i--){
 
     if(i > 0)
       prev = neuralNet.part_d[i-1];
@@ -103,7 +103,8 @@ void loadWeights(NN *neuralNet, char *loadFile){
 
   file = (char*)calloc(len, sizeof(char));
 
-  fread(file, len, sizeof(char), fp);
+  if(fread(file, len, sizeof(char), fp) == 0)
+    return;
 
   char *token;
   char *in;
@@ -115,7 +116,7 @@ void loadWeights(NN *neuralNet, char *loadFile){
     strcpy(in, token);
 
     loadMatrix(&(neuralNet->weights[i]), in);
-    
+
     free(in);
     i++;
   }
