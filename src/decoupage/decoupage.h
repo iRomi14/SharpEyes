@@ -1,21 +1,18 @@
 #ifndef DECOUPAGE_H
 #define DECOUPAGE_H
 
+# include <SDL.h>
 # include "../matrix/matrix.h"
 
 //*********************************************************************//
 //*************************** TOOLS ***********************************//
 //*********************************************************************//
 
-SDL_Surface* copy_image(SDL_Surface *img);
+void bmp_to_vector(Vector *dst, SDL_Surface *image_surface);
 
 double *create_matrix(SDL_Surface *image_surface);
 
 void print_matrix(double mat[], size_t lines, size_t cols);
-
-SDL_Surface* increaseChar(SDL_Surface *img);
-
-SDL_Surface* Resize(SDL_Surface *img);
 
 //*********************************************************************//
 //******************* DETECTION OF WHITE LINES ************************//
