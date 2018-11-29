@@ -14,31 +14,6 @@
 **  process
 */
 
-/*
-EXAMPLE :
-  <-----COLUMN [FIX][X]-------->
-DOWN L                            DOWN R
-  {{'1','0','2','X','2','1','1'},   -
-  {'X','1','1','2','2','1','1'},    !
-  {'X','1','1','2','2','1','1'},    !
-  {'1','X','2','X','2','2','2'},    !
-  {'1','X','1','X','1','X','2'},    ROW [Y]
-  {'1','X','2','X','2','1','1'},    !
-  {'1','X','2','2','1','X','1'},    !
-  {'1','X','2','X','2','1','X'},    !
-  {'1','1','1','X','2','2','1'},    !
-  {'1','X','2','X','2','1','1'}}    -
-DOWN L                            DOWN R
-'total' will be 70 = 10 * 7
-'column' will be 7 = size of first row
-'row' will be 10 = 70 / 7
-*/
-
-//******************************************************************************//
-//****************************** R L S A ***************************************//
-//******************************************************************************//
-
-
 //******************************************************************************//
 //******************************* TOOLS ****************************************//
 //******************************************************************************//
@@ -80,285 +55,6 @@ void print_matrix(double mat[], size_t lines, size_t cols)
     printf("\n");
 }
 
-
-//******************************************************************************//
-//********************** DETECTION OF WHITE LINES ******************************//
-//******************************************************************************//
-
-/* Cut the lines of the image */
-SDL_Surface* lineCut(SDL_Surface *img)
-{
-    /* Variables */
-    Uint32 pixel;
-    Uint8 r;
-    Uint8 g;
-    Uint8 b;
-    int isBlank = 1;
-    int firstCut = 1;
-    SDL_Surface *img_copy = copy_image(img);
-    for(int i = 0; i < (img_copy -> h) ; i++)
-    {
-      isBlank = 1 ;
-      for(int j = 0 ; j < (img_copy -> w); j++)
-      {
-        pixel = get_pixel(img, j, i);
-        SDL_GetRGB(pixel, img -> format, &r, &g, &b);
-        //Check if there is a black character in this line
-        if(!r && !g && !b)
-        {
-          isBlank = 0;
-          break;
-        }
-      }
-      //For the first cut we cut the pixel line
-      //before the line with a black character
-      if(!isBlank && firstCut)
-      {
-          for(int k = 0; k < (img_copy -> w); k++)
-          {
-            pixel = SDL_MapRGB(img_copy -> format, 255, 0, 0);
-            put_pixel(img_copy, k, i - 1, pixel);
-          }
-          firstCut = 0;
-      }
-      //For the second cut we cut the first white line
-      if(isBlank && !firstCut)
-      {
-        for(int k = 0; k < (img_copy -> w); k++)
-        {
-          pixel = SDL_MapRGB(img_copy -> format, 255, 0, 0);
-          put_pixel(img_copy, k, i, pixel);
-        }
-        firstCut = 1;
-      }
-    }
-    return(img_copy);
-}
-
-/* Isolate the lines */
-void isolateLine(SDL_Surface *img)
-{
-  /* Variables */
-  Uint32 pixel;
-  Uint8 r;
-  Uint8 g;
-  Uint8 b;
-  int firstCut;
-  int lastCut = 0;
-
-  for(int i = 0; i < (img -> h); i++)
-  {
-    if(i != 0 && i <= lastCut)
-    {
-      continue;
-    }
-    pixel = get_pixel(img, 0, i);
-    SDL_GetRGB(pixel, img -> format, &r, &g, &b);
-    //If there is a red line start cut
-    if(r == 255 && b == 0 && g == 0)
-    {
-      firstCut = i + 1;
-
-      for(int j = firstCut + 1; j < (img -> h); j++)
-      {
-        pixel = get_pixel(img, 0, j);
-        SDL_GetRGB(pixel, img -> format, &r, &g, &b);
-
-        //Detect the second line
-        if(r == 255 && b==0 && g == 0)
-        {
-          lastCut = j;
-          //Isolate into a surface the linecut
-          cuttedSurface(img, firstCut, lastCut);
-          break;
-        }
-      }
-    }
-  }
-}
-
-/* Display the isolated cuts */
-void cuttedSurface(SDL_Surface *img, int firstCut,
-                  int lastCut)
-{
-  /* Variables */
-  Uint32 pixel;
-  SDL_Surface* copy = NULL;
-
-  //Create a surface that contain the cutting zone
-  copy = SDL_CreateRGBSurface(0,
-                              img -> w,
-                              lastCut - firstCut,
-                              img -> format -> BitsPerPixel, 0, 0, 0, 0);
-  //Copy the cutting zone into the new surface
-  for(int i = 0; i < copy -> w; i++)
-  {
-    for(int j = 0; j < copy -> h; j++)
-    {
-      pixel = get_pixel(img, i, firstCut + j);
-      put_pixel(copy, i, j, pixel);
-    }
-  }
-  //Cut the characters
-  charCut(copy);
-  isolateChar(copy);
-}
-
-//******************************************************************************//
-//******************** ADJUSTEMENT OF CHARACTERS *******************************//
-//******************************************************************************//
-
-/* Cut the characters into the isolated cuts */
-void charCut(SDL_Surface *img)
-{
-  // Variables
-  Uint32 pixel;
-  Uint8 r ;
-  Uint8 g;
-  Uint8 b;
-  int thereIsChar = 0;
-  int lineWasWhite = 1;
-  int canCut = 0;
-
-  for(int i = 0; i < img -> w; i++)
-  {
-    lineWasWhite = 1;
-    for(int j = 0; j < img -> h; j++)
-    {
-      pixel = get_pixel(img, i, j);
-      SDL_GetRGB(pixel, img -> format, &r, &g, &b);
-      if(r == 0 && g == 0 && b == 0)
-      {
-          thereIsChar = 1;
-          lineWasWhite = 0;
-          break;
-      }
-    }
-    if(lineWasWhite && !canCut)
-    {
-      continue;
-    }
-    if(thereIsChar && !canCut)
-    {
-      for(int k = 0; k < img -> h; k++)
-      {
-        pixel = SDL_MapRGB(img -> format, 0, 0, 255);
-        put_pixel(img, i - 1, k, pixel);
-      }
-      canCut = 1;
-    }
-    if(lineWasWhite && canCut)
-    {
-      for(int k = 0; k < img -> h; k++)
-      {
-        pixel = SDL_MapRGB(img -> format, 255, 0, 0);
-        put_pixel(img, i, k, pixel);
-      }
-      canCut = 0;
-    }
-
-  }
-}
-void isolateChar(SDL_Surface *img)
-{
-  //Variables
-  Uint32 pixel;
-  Uint8 r ;
-  Uint8 g;
-  Uint8 b;
-  int firstCut;
-  int lastCut = -1;
-  int lastRead = -1;
-  SDL_Surface* copy = NULL;
-  SDL_Surface *resize = NULL;
-
-  for(int i = 0; i < img -> w; i++)
-  {
-    if(i < lastRead)
-    {
-      continue;
-    }
-    pixel = get_pixel(img, i, 0);
-    SDL_GetRGB(pixel, img -> format, &r, &g, &b);
-    if(r == 255 && g == 0 && b == 0)
-    {
-      firstCut = i + 1;
-      pixel = get_pixel(img, firstCut, 0);
-      SDL_GetRGB(pixel, img -> format, &r, &g, &b);
-      while(r == 255 && g == 0 && b == 0)
-      {
-        firstCut++;
-        pixel = get_pixel(img, firstCut, 0);
-        SDL_GetRGB(pixel, img -> format, &r, &g, &b);
-      }
-
-      //Search for second Cut
-      for(int j = firstCut + 1; j < img -> w; j++)
-      {
-        pixel = get_pixel(img, j, 0);
-        SDL_GetRGB(pixel, img -> format, &r, &g, &b);
-        if(r == 255 && g == 0 && b == 0)
-        {
-          lastRead = j;
-          lastCut = j - 1;
-
-          //Create a surface that contain the cutting zone
-          copy = SDL_CreateRGBSurface(0,
-                                      lastCut-firstCut + 1,
-                                      img->h,
-                                      img->format->BitsPerPixel,0,0,0,0);
-          //Copy the cutting zone into the new surface
-          for(int w = 0; w < copy -> w; w++)
-          {
-            for(int h = 0; h < copy -> h; h++)
-            {
-              pixel = get_pixel(img, firstCut + w, h);
-              put_pixel(copy, w, h, pixel);
-            }
-          }
-          resize = increaseChar(copy);
-          //Detect the char
-          Vector v;
-          bmp_to_vector(&v, resize);
-          printVector(v);
-
-	  //double *letter = create_matrix(resize);
-	  //print_matrix(letter, 28, 28);
-          //Prevent false space
-          /*int space = 1;
-          //printf("%d\n",copy->w);
-          if(copy->w <5)
-          {
-            for(int i = 0;i < 28*28; i++)
-            {
-              if((int)letter[i] == 1)
-              {
-                space = 0;
-                break;
-              }
-            }
-            if(space == 1)
-              break;
-          }
-
-          space = 1;
-          for(int i = 0;i < 28*28; i++)
-          {
-            if((int)letter[i] == 1)
-            {
-              space = 0;
-              break;
-            }
-	  }*/
-          /*if(space)
-          */
-          break;
-        }
-      }
-    }
-  }
-}
-
 void bmp_to_vector(Vector *dst, SDL_Surface *image_surface){
 
   size_t width = (size_t)image_surface->w; //je recupère la largeur de l'image soit le nombre de pixel en largeur.
@@ -381,6 +77,215 @@ void bmp_to_vector(Vector *dst, SDL_Surface *image_surface){
       if (r == 0) //noir
         dst->data[x*height+y]/*.data[x]*/  = 1.0;//si c'est un pixel noir je met ca valeur à 0.
 
+    }
+  }
+}
+
+//******************************************************************************//
+//********************** DETECTION OF WHITE LINES ******************************//
+//******************************************************************************//
+
+/* Cut the lines of the image */
+SDL_Surface* draw_lines(SDL_Surface *img)
+{
+    /* Variables */
+    Uint32 pixel;
+    Uint8 r, g, b;
+    int isBlank = 1;
+    int firstCut = 1;
+    SDL_Surface *img_copy = copy_image(img);
+    int height = img_copy -> h;
+    int width = img_copy -> w;
+
+    for(int i = 0; i < height ; i++){
+      isBlank = 1 ;
+      for(int j = 0 ; j < width; j++){
+        pixel = get_pixel(img, j, i);
+        SDL_GetRGB(pixel, img -> format, &r, &g, &b);
+        if(!r && !g && !b) //Vérifie si il y a ue lettre sur cette ligne.
+        {
+          isBlank = 0;
+          break;
+        }
+      }
+      // Pour le premier découpage, on coupe la ligne avant la ligne avec les lettres.
+      if(!isBlank && firstCut)
+      {
+          for(int k = 0; k < width; k++){
+            pixel = SDL_MapRGB(img_copy -> format, 255, 0, 0);
+            put_pixel(img_copy, k, i - 1, pixel);
+          }
+          firstCut = 0;
+      }
+      //Pour le second decoupage, on coupe la premère ligne blanche.
+      if(isBlank && !firstCut)
+      {
+        for(int k = 0; k < width; k++){
+          pixel = SDL_MapRGB(img_copy -> format, 255, 0, 0);
+          put_pixel(img_copy, k, i, pixel);
+        }
+        firstCut = 1;
+      }
+    }
+    return(img_copy);
+}
+
+/* Isolate the lines */
+void isolateLine(SDL_Surface *img)
+{
+  /* Variables */
+  Uint32 pixel;
+  Uint8 r , g , b;
+  int firstCut;
+  int lastCut = 0;
+  int height = img -> h;
+
+  for(int i = 0; i < height; i++)
+  {
+    if(i != 0 && i <= lastCut)
+      continue;
+
+    pixel = get_pixel(img, 0, i);
+    SDL_GetRGB(pixel, img -> format, &r, &g, &b);
+    if(r == 255 && b == 0 && g == 0) //Si on a une ligne rouge on commence le découpage.
+    {
+      firstCut = i + 1;
+      for(int j = firstCut + 1; j < height; j++)
+      {
+        pixel = get_pixel(img, 0, j);
+        SDL_GetRGB(pixel, img -> format, &r, &g, &b);
+
+
+        if(r == 255 && b==0 && g == 0) //Détecter la deuxième ligne.
+        {
+          lastCut = j;
+          // One isole la ligne découpé avec les lettres (dedans) dans une surface.
+          cutSurface(img, firstCut, lastCut);
+          break;
+        }
+      }
+    }
+  }
+}
+
+/* Display the isolated cuts */
+void cutSurface(SDL_Surface *img, int firstCut,int lastCut)
+{
+  //Créer une surface qui contient la zone a découpé;
+  SDL_Surface* copy = SDL_CreateRGBSurface(0,img -> w,lastCut - firstCut,
+                              img -> format -> BitsPerPixel, 0, 0, 0, 0);
+  //COpié la zoné découpé dans une nouvelle surface.
+  for(int i = 0; i < copy -> w; i++){
+    for(int j = 0; j < copy -> h; j++){
+      Uint32 pixel = get_pixel(img, i, firstCut + j);
+      put_pixel(copy, i, j, pixel);
+    }
+  }
+  //Cut the characters
+  charCut(copy);
+  isolateChar(copy);
+}
+
+//******************************************************************************//
+//******************** ADJUSTEMENT OF CHARACTERS *******************************//
+//******************************************************************************//
+
+/* Cut the characters into the isolated cuts */
+void charCut(SDL_Surface *img)
+{
+  /*Variables*/
+  Uint32 pixel;
+  Uint8 r, g, b;
+  int thereIsChar = 0;
+  int lineWasWhite = 1;
+  int canCut = 0;
+
+  for(int i = 0; i < img -> w; i++){
+    lineWasWhite = 1;
+    for(int j = 0; j < img -> h; j++){
+      pixel = get_pixel(img, i, j);
+      SDL_GetRGB(pixel, img -> format, &r, &g, &b);
+      if(r == 0 && g == 0 && b == 0){
+          thereIsChar = 1;
+          lineWasWhite = 0;
+          break;
+      }
+    }
+    if(lineWasWhite && !canCut)
+      continue;
+
+    if(thereIsChar && !canCut)
+    {
+      for(int k = 0; k < img -> h; k++){
+        pixel = SDL_MapRGB(img -> format, 0, 0, 255);
+        put_pixel(img, i - 1, k, pixel);
+      }
+      canCut = 1;
+    }
+    if(lineWasWhite && canCut)
+    {
+      for(int k = 0; k < img -> h; k++){
+        pixel = SDL_MapRGB(img -> format, 255, 0, 0);
+        put_pixel(img, i, k, pixel);
+      }
+      canCut = 0;
+    }
+  }
+}
+void isolateChar(SDL_Surface *img)
+{
+  /*Variables*/
+  Uint32 pixel;
+  Uint8 r, g, b;
+  int firstCut;
+  int lastCut = -1;
+  int lastRead = -1;
+
+  for(int i = 0; i < img -> w; i++){
+    if(i < lastRead)
+      continue;
+
+    pixel = get_pixel(img, i, 0);
+    SDL_GetRGB(pixel, img -> format, &r, &g, &b);
+    if(r == 255 && g == 0 && b == 0)
+    {
+      firstCut = i + 1;
+      pixel = get_pixel(img, firstCut, 0);
+      SDL_GetRGB(pixel, img -> format, &r, &g, &b);
+      while(r == 255 && g == 0 && b == 0)
+      {
+        firstCut++;
+        pixel = get_pixel(img, firstCut, 0);
+        SDL_GetRGB(pixel, img -> format, &r, &g, &b);
+      }
+      // On cherche pour le second découpage.
+      for(int j = firstCut + 1; j < img -> w; j++){
+        pixel = get_pixel(img, j, 0);
+        SDL_GetRGB(pixel, img -> format, &r, &g, &b);
+        if(r == 255 && g == 0 && b == 0)
+        {
+          lastRead = j;
+          lastCut = j - 1;
+          //On créer une nouvelle sruface qui contient la zone a découpé.
+          SDL_Surface* copy = SDL_CreateRGBSurface(0,lastCut-firstCut + 1,img->h,
+                                      img->format->BitsPerPixel,0,0,0,0);
+          //On copie la zone a découpé dans une nouvelle surface.
+          for(int w = 0; w < copy -> w; w++){
+            for(int h = 0; h < copy -> h; h++){
+              pixel = get_pixel(img, firstCut + w, h);
+              put_pixel(copy, w, h, pixel);
+            }
+          }
+          SDL_Surface *resize = Resize(copy);
+          //Détecter la lettre.
+          /*Vector v;
+          bmp_to_vector(&v, resize);
+          printVector(v);*/
+          double *letter = create_matrix(resize);
+          print_matrix(letter, 28, 28);
+          break;
+        }
+      }
     }
   }
 }
