@@ -66,7 +66,7 @@ int main(){
 
 	otsu(image);
 	printf("Binarize, done!\n");
-	image = lineCut(image);
+	image = draw_lines(image);
 	printf("Line Cuts\n");
 	isolateLine(image);
 	printf("Finish Treatment\n");

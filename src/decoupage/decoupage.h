@@ -18,11 +18,11 @@ void print_matrix(double mat[], size_t lines, size_t cols);
 //******************* DETECTION OF WHITE LINES ************************//
 //*********************************************************************//
 
-SDL_Surface* lineCut(SDL_Surface *img);
+SDL_Surface* draw_lines(SDL_Surface *img);
 
 void isolateLine(SDL_Surface *img);
 
-void cuttedSurface(SDL_Surface *img, int firstCut, int lastCut);
+void cutSurface(SDL_Surface *img, int firstCut, int lastCut);
 
 //******************************************************************************//
 //******************** ADJUSTEMENT OF CHARACTERS *******************************//
