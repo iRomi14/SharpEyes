@@ -5,7 +5,7 @@
 # include "decoupage.h"
 # include "../pixel/pixel_operations.h"
 # include "../matrix/matrix.h"
-# include <err.h>
+# include "../image_manipulation/SDL_functions.h"
 
 /*
 **  SEGMENTATION
@@ -42,25 +42,6 @@ DOWN L                            DOWN R
 //******************************************************************************//
 //******************************* TOOLS ****************************************//
 //******************************************************************************//
-
-SDL_Surface* copy_image(SDL_Surface *img)
-{
-  Uint32 pixel;
-  SDL_Surface* copy;
-  copy = SDL_CreateRGBSurface(0,
-                              img -> w,
-                              img -> h,
-                              img -> format -> BitsPerPixel,0,0,0,0);
-  for(int i = 0; i < img -> w; i++)
-  {
-    for(int j = 0;j < img -> h; j++)
-    {
-      pixel = get_pixel(img, i, j);
-      put_pixel(copy, i, j, pixel);
-    }
-  }
-  return(copy);
-}
 
 double *create_matrix(SDL_Surface *img)
 {
@@ -99,25 +80,7 @@ void print_matrix(double mat[], size_t lines, size_t cols)
     printf("\n");
 }
 
-SDL_Surface* increaseChar(SDL_Surface *img)
-{
-  SDL_Surface *dest = SDL_CreateRGBSurface(SDL_SWSURFACE,
-                        28,
-                        28,
-                        img->format->BitsPerPixel,0,0,0,0);
-  SDL_SoftStretch(img, NULL, dest, NULL);
-  return dest;
-}
 
-SDL_Surface* Resize(SDL_Surface *img)
-{
-  SDL_Surface *dest = SDL_CreateRGBSurface(SDL_SWSURFACE,
-                        576,
-                        460,
-                        img->format->BitsPerPixel,0,0,0,0);
-  SDL_SoftStretch(img, NULL, dest, NULL);
-  return dest;
-}
 //******************************************************************************//
 //********************** DETECTION OF WHITE LINES ******************************//
 //******************************************************************************//
@@ -239,7 +202,6 @@ void cuttedSurface(SDL_Surface *img, int firstCut,
   //Cut the characters
   charCut(copy);
   isolateChar(copy);
-  //net -> str = concat(net -> str, "\n");
 }
 
 //******************************************************************************//
@@ -355,11 +317,15 @@ void isolateChar(SDL_Surface *img)
             }
           }
           resize = increaseChar(copy);
-          //Detect the chars
-	  double *letter = create_matrix(resize);
-	  print_matrix(letter, 28, 28);
+          //Detect the char
+          Vector v;
+          bmp_to_vector(&v, resize);
+          printVector(v);
+
+	  //double *letter = create_matrix(resize);
+	  //print_matrix(letter, 28, 28);
           //Prevent false space
-          int space = 1;
+          /*int space = 1;
           //printf("%d\n",copy->w);
           if(copy->w <5)
           {
@@ -383,22 +349,38 @@ void isolateChar(SDL_Surface *img)
               space = 0;
               break;
             }
-	  }
+	  }*/
           /*if(space)
-          {
-
-            net -> str = concat(net->str," ");
-          }
-          else
-          {
-            char res = DetectText(net, letter);
-            char str[2] = "\0";
-            str[0] = res;
-            net -> str = concat(net -> str, str);
-          }*/
+          */
           break;
         }
       }
+    }
+  }
+}
+
+void bmp_to_vector(Vector *dst, SDL_Surface *image_surface){
+
+  size_t width = (size_t)image_surface->w; //je recupère la largeur de l'image soit le nombre de pixel en largeur.
+
+  size_t height = (size_t)image_surface->h; //je recupère la hauteur de l'image soit le nombre de pixel en hauteur.
+
+  //Matrix final;
+  initVector(dst, height*width, false); // j'initialise une matrice de hauteur par largeur.
+
+  for (size_t x = 0 ; x < width; x++) {
+    for (size_t y = 0; y < height; y++) { //je parcour mes pixels un par un.
+
+      Uint32 pixel = get_pixel(image_surface,x,y); // je recupère un pixel.
+      Uint8 r, g, b;
+      SDL_GetRGB(pixel, image_surface->format, &r, &g, &b); // je recupère ces valeur R G B.
+
+      if (r == 255) //blanc
+        dst->data[x*height+y]/*.data[x]*/ = -1.0; //si c'est un pixel blanc je met ca valeur à 1.
+
+      if (r == 0) //noir
+        dst->data[x*height+y]/*.data[x]*/  = 1.0;//si c'est un pixel noir je met ca valeur à 0.
+
     }
   }
 }
