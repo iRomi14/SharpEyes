@@ -42,10 +42,6 @@ int main(int argc, char *argv[])
     GObject *select_image = gtk_builder_get_object(BUILDER, "open");
     g_signal_connect (select_image, "activate", G_CALLBACK (select_file), NULL);
 
-    //Ouvrir image
-    /*GObject *open_button = gtk_builder_get_object(BUILDER, "save");
-    g_signal_connect (open_button, "activate", G_CALLBACK (open_image), NULL);*/
-
     //binarisation
     GObject *bin_button = gtk_builder_get_object(BUILDER, "binariser");
     g_signal_connect (bin_button, "activate", G_CALLBACK (binarize_button), NULL);

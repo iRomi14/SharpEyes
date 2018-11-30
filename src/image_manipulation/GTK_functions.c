@@ -56,9 +56,6 @@ void select_file(GObject *bouton)
 		char *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialogue));
 		strncpy(FILE_NAME, filename, 256);
 		printf("%s\n", FILE_NAME);
-		/*GtkWidget *image = gtk_image_new_from_file(filename);
-		open_image(filename, GTK_IMAGE(image));*/
-		//printf("%s\n%s\n", filename, FILE_NAME);
 		g_free(filename);
 	}
 	gtk_widget_destroy(dialogue);
@@ -75,7 +72,6 @@ void open_image_test()
 		SDL_Surface *new_image = Resize(image, 720, 480);
 		SDL_SaveBMP(new_image,"../temp/new_image_resized.bmp");
 		realpath("../temp/new_image_resized.bmp", FILE_NAME);
-		//strncpy(FILE_NAME, "new_image_resized", 256);
 		SDL_FreeSurface(new_image);
 	}
 
@@ -86,13 +82,6 @@ void open_image_test()
 		reload_image(0);
 	else
 		reload_image(1);
-	/*GObject *frame = gtk_builder_get_object(BUILDER, "frame");
-
-	GtkWidget *img;
-	img = gtk_image_new_from_file(FILE_NAME);
-
-	gtk_container_add(GTK_CONTAINER(frame), img);
-    gtk_widget_show(img);*/
 }
 
 void reload_image(int assertion)
@@ -104,6 +93,7 @@ void reload_image(int assertion)
 		PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
 		gtk_container_add(GTK_CONTAINER(FRAME), PRINT_IMAGE);
     	gtk_widget_show(PRINT_IMAGE);
+    	printf("Fisrt gb : %p\n", PRINT_IMAGE);
 	}
 	if (assertion == 0)
 	{
@@ -113,7 +103,8 @@ void reload_image(int assertion)
 		gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);
 		gtk_container_add(GTK_CONTAINER(FRAME), print_img_temp);
     	gtk_widget_show(print_img_temp);
-		//PRINT_IMAGE = print_img_temp;
+		PRINT_IMAGE = print_img_temp;
+		printf("global : %p  / internal : %p\n", PRINT_IMAGE, print_img_temp);
 		//FRAME = gtk_builder_get_object(BUILDER, "frame");
 		//PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
 		//reload_image(1);
@@ -126,12 +117,3 @@ void reload_image(int assertion)
     //gtk_widget_show(PRINT_IMAGE);
     //gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);
 }
-
-/*SDL_Surface* resize_image(SDL_Surface *img, int w, int h)
-{
-	SDL_Surface *dest = SDL_CreateRGBSurface(SDL_SWSURFACE,
-												w, h, 
-												img->format->BitsPerPixel, 0,0,0,0);
-	SDL_SoftStretch(img, NULL, dest, NULL);
-	return dest;
-}*/

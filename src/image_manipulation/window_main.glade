@@ -82,11 +82,11 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkMenuItem" id="rotation">
+                  <object class="GtkMenuItem" id="Reconnaissance">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">tourner l'image</property>
-                    <property name="label" translatable="yes" context="rotate">rotation</property>
+                    <property name="tooltip_text" translatable="yes">reconnaitre le texte de l'image</property>
+                    <property name="label" translatable="yes">Reconnaissance</property>
                     <property name="use_underline">True</property>
                   </object>
                 </child>
@@ -95,11 +95,26 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuItem">
+          <object class="GtkMenuItem" id="screen">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">_Affichage</property>
             <property name="use_underline">True</property>
+            <child type="submenu">
+              <object class="GtkMenu">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkMenuItem" id="rotation">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">tourner l'image</property>
+                    <property name="label" translatable="yes">rotation</property>
+                    <property name="use_underline">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
         <child>
