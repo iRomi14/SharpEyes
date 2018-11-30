@@ -8,6 +8,7 @@
 #include "open_image.h"
 #include "to_binarize.h"
 #include "GTK_functions.h"
+#include "SDL_functions.h"
 
 void on_window_main_destroy(GObject *object, gpointer user_data)
 {
@@ -71,15 +72,20 @@ void open_image_test()
 
 	if(image->w > 720 && image->h > 480)
 	{
-		SDL_Surface *new_image = resize_image(image, 720, 480);
-		SDL_SaveBMP(new_image,"new_image_resized");
-		strncpy(FILE_NAME, "new_image_resized", 256);
+		SDL_Surface *new_image = Resize(image, 720, 480);
+		SDL_SaveBMP(new_image,"../temp/new_image_resized.bmp");
+		realpath("../temp/new_image_resized.bmp", FILE_NAME);
+		//strncpy(FILE_NAME, "new_image_resized", 256);
 		SDL_FreeSurface(new_image);
 	}
+
 	IMAGE = SDL_LoadBMP(FILE_NAME);
 	SDL_FreeSurface(image);
 	//Affichage fenentre dans GTK
-	reload_image(1);
+	if (PRINT_IMAGE)
+		reload_image(0);
+	else
+		reload_image(1);
 	/*GObject *frame = gtk_builder_get_object(BUILDER, "frame");
 
 	GtkWidget *img;
@@ -96,31 +102,36 @@ void reload_image(int assertion)
 	{
 		FRAME = gtk_builder_get_object(BUILDER, "frame");
 		PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
+		gtk_container_add(GTK_CONTAINER(FRAME), PRINT_IMAGE);
+    	gtk_widget_show(PRINT_IMAGE);
 	}
 	if (assertion == 0)
 	{
-		GtkWidget *print_img_temp = g_object_ref(PRINT_IMAGE);
-		gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);
-		PRINT_IMAGE = print_img_temp;
-		//FRAME = gtk_builder_get_object(BUILDER, "frame");
 		printf("%s\n", FILE_NAME);
-		PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
+		//GtkWidget *print_img_temp = g_object_ref(PRINT_IMAGE);
+		GtkWidget *print_img_temp = gtk_image_new_from_file(FILE_NAME);
+		gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);
+		gtk_container_add(GTK_CONTAINER(FRAME), print_img_temp);
+    	gtk_widget_show(print_img_temp);
+		//PRINT_IMAGE = print_img_temp;
+		//FRAME = gtk_builder_get_object(BUILDER, "frame");
+		//PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
 		//reload_image(1);
 	}
 
 	//GtkWidget *img;
 	//PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
 
-	gtk_container_add(GTK_CONTAINER(FRAME), PRINT_IMAGE);
-    gtk_widget_show(PRINT_IMAGE);
+	//gtk_container_add(GTK_CONTAINER(FRAME), PRINT_IMAGE);
+    //gtk_widget_show(PRINT_IMAGE);
     //gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);
 }
 
-SDL_Surface* resize_image(SDL_Surface *img, int w, int h)
+/*SDL_Surface* resize_image(SDL_Surface *img, int w, int h)
 {
 	SDL_Surface *dest = SDL_CreateRGBSurface(SDL_SWSURFACE,
 												w, h, 
 												img->format->BitsPerPixel, 0,0,0,0);
 	SDL_SoftStretch(img, NULL, dest, NULL);
 	return dest;
-}
+}*/

@@ -19,6 +19,6 @@ void smoothy_button(GObject *object, gpointer user_data);
 void select_file(GObject *bouton);
 void open_image_test();
 void reload_image(int assertion);
-SDL_Surface* resize_image(SDL_Surface *img, int w, int h);
+//SDL_Surface* resize_image(SDL_Surface *img, int w, int h);
 
 #endif
