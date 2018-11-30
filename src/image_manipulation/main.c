@@ -4,12 +4,11 @@
 
 #include "GTK_functions.h"
 #include "to_binarize.h"
-#include "open_image.h"
 #include "SDL_functions.h"
 
 /* 
     Compiler GTK + SDL: 
-        gcc -o gladewin main.c open_image.c GTK_functions.c SDL_functions.c to_binarize.c ../pixel/pixel_operations.c ../decoupage/decoupage.h
+        gcc -o gladewin main.c open_image.c GTK_functions.c SDL_functions.c to_binarize.c ../pixel/pixel_operations.c ../decoupage/decoupage.c ../matrix/vector.c ../matrix/matrix.c
         -Wall $(sdl2-config --cflags --libs) `pkg-config --cflags --libs gtk+-3.0` -export-dynamic
     Compiler SDL : 
         gcc test.c -o exec $(sdl2-config --cflags --libs)
@@ -45,6 +44,10 @@ int main(int argc, char *argv[])
     //binarisation
     GObject *bin_button = gtk_builder_get_object(BUILDER, "binariser");
     g_signal_connect (bin_button, "activate", G_CALLBACK (binarize_button), NULL);
+
+    //drawline RLSA
+    GObject *rocognize_button = gtk_builder_get_object(BUILDER, "Reconnaissance");
+    g_signal_connect(rocognize_button, "activate", G_CALLBACK(draw_lines_button), NULL);
 
     //Grayscale
     GObject *gray_button = gtk_builder_get_object(BUILDER, "gris");

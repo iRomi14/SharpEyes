@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "open_image.h"
 #include "to_binarize.h"
 #include "GTK_functions.h"
 #include "SDL_functions.h"
+#include "../decoupage/decoupage.h"
 
 void on_window_main_destroy(GObject *object, gpointer user_data)
 {
@@ -22,6 +22,13 @@ void binarize_button(GObject *object, gpointer user_data)
     otsu(IMAGE);
     realpath("../temp/binarized.bmp", FILE_NAME);
     reload_image(0);
+}
+
+void draw_lines_button(GObject *object, gpointer user_data)
+{
+	draw_lines(IMAGE);
+	realpath("../temp/rlsa.bmp", FILE_NAME);
+	reload_image(0);
 }
 
 void grayscale_button(GObject *object, gpointer user_data)
