@@ -112,7 +112,7 @@ void otsu(SDL_Surface *img)
                 put_pixel(img, i, j, SDL_MapRGB(img->format, 0,0,0));
         }
     }
-	SDL_SaveBMP(img, "../temp/binarized");
+	SDL_SaveBMP(img, "../temp/binarized.bmp");
 }
 
 //******************************************************************************//
