@@ -38,12 +38,12 @@ SDL_Surface* copy_image(SDL_Surface *img)
   return(copy);
 }
 
-SDL_Surface* Resize(SDL_Surface *img)
+SDL_Surface* Resize(SDL_Surface *img, int width, int height)
 {
   SDL_Surface *dest = SDL_CreateRGBSurface(SDL_SWSURFACE,
-                        28,
-                        28,
+                        width,
+                        height,
                         img->format->BitsPerPixel,0,0,0,0);
-  SDL_SoftStretch(img, NULL, dest, NULL);
+  SDL_BlitScaled(img, NULL, dest, NULL);
   return dest;
 }
