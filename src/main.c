@@ -17,8 +17,8 @@
 	gcc test.c -o exec -I SDL/include -L SDL/lib64 -lmingw64 -lSDL2main -lSDL2
 */
 
-#define WIDTH 1230
-#define HEIGHT 890
+#define WIDTH 1920
+#define HEIGHT 1080
 #define XTIME 500
 
 int main(){
