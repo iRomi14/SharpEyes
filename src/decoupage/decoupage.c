@@ -297,7 +297,7 @@ void isolateChar(SDL_Surface *img)
           }
           if(copy -> w > 5 || (isSpace(copy) == 0))
           {
-            SDL_Surface *resize = Resize(copy);
+            SDL_Surface *resize = Resize(copy, 28, 28);
             //Détecter la lettre.
             /*Vector v;
             bmp_to_vector(&v, resize);
