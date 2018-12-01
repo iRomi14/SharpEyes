@@ -13,37 +13,49 @@
 
 void on_window_main_destroy()
 {
-	g_object_unref(BUILDER);
-	SDL_FreeSurface(IMAGE);
-    gtk_main_quit();
+	if (PRINT_IMAGE)
+	{
+		g_object_unref(BUILDER);
+		SDL_FreeSurface(IMAGE);
+    	gtk_main_quit();
+	}
 }
 
 void binarize_button()
 {
-    otsu(IMAGE);
-	SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
-    if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
-			return;
-    reload_image(0);
+	if (PRINT_IMAGE)
+	{
+		otsu(IMAGE);
+		SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
+    	if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
+    		return;
+    	reload_image(0);
+	}
 }
 
 void draw_lines_button()
 {
-	SDL_Surface *img = draw_lines(IMAGE);
-	SDL_SaveBMP(img, "src/temp/rlsa.bmp");
-	if(realpath("src/temp/rlsa.bmp", FILE_NAME) == NULL)
-		return;
-	reload_image(0);
-	SDL_FreeSurface(img);
+	if (PRINT_IMAGE)
+	{
+		SDL_Surface *img = draw_lines(IMAGE);
+		SDL_SaveBMP(img, "src/temp/rlsa.bmp");
+		if(realpath("src/temp/rlsa.bmp", FILE_NAME) == NULL)
+			return;
+		reload_image(0);
+		SDL_FreeSurface(img);
+	}
 }
 
 void grayscale_button()
 {
-	greyscale(IMAGE);
-	SDL_SaveBMP(IMAGE, "src/temp/grayscaled.bmp");
-	if(realpath("src/temp/grayscaled.bmp", FILE_NAME) == NULL)
-		return;
-	reload_image(0);
+	if (PRINT_IMAGE)
+	{
+		greyscale(IMAGE);
+		SDL_SaveBMP(IMAGE, "src/temp/grayscaled.bmp");
+		if(realpath("src/temp/grayscaled.bmp", FILE_NAME) == NULL)
+			return;
+		reload_image(0);
+	}
 }
 
 void rotate_button()
@@ -53,11 +65,14 @@ void rotate_button()
 
 void smoothy_button()
 {
-    remove_dots(IMAGE);
-    SDL_SaveBMP(IMAGE, "src/temp/smoothed.bmp");
-    if(realpath("src/temp/smoothed.bmp", FILE_NAME) == NULL)
-		return;
-	reload_image(0);
+	if (PRINT_IMAGE)
+	{
+		remove_dots(IMAGE);
+    	SDL_SaveBMP(IMAGE, "src/temp/smoothed.bmp");
+    	if(realpath("src/temp/smoothed.bmp", FILE_NAME) == NULL)
+    		return;
+    	reload_image(0);
+	}
 }
 
 void start_OCR()
