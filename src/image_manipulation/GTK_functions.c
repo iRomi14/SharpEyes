@@ -20,18 +20,29 @@ void on_window_main_destroy()
 void binarize_button()
 {
     otsu(IMAGE);
+<<<<<<< HEAD
 		SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
     if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
 			return;
+=======
+    char *s = realpath("../temp/binarized.bmp", NULL);
+    strncpy(FILE_NAME, s, 256);
+>>>>>>> acceebcaba30f1a4d401722270be32f748d3fc66
     reload_image(0);
 }
 
 void draw_lines_button()
 {
 	SDL_Surface *img = draw_lines(IMAGE);
+<<<<<<< HEAD
 	SDL_SaveBMP(img, "src/temp/rlsa.bmp");
 	if(realpath("src/temp/rlsa.bmp", FILE_NAME) == NULL)
 		return;
+=======
+	SDL_SaveBMP(img, "../temp/rlsa.bmp");
+	char *s = realpath("../temp/rlsa.bmp", NULL);
+	strncpy(FILE_NAME, s, 256);
+>>>>>>> acceebcaba30f1a4d401722270be32f748d3fc66
 	reload_image(0);
 	SDL_FreeSurface(img);
 }
@@ -39,8 +50,13 @@ void draw_lines_button()
 void grayscale_button()
 {
 	greyscale(IMAGE);
+<<<<<<< HEAD
 	if(realpath("src/temp/grayscaled.bmp", FILE_NAME) == NULL)
 		return;
+=======
+	char *s = realpath("../temp/grayscaled.bmp", NULL);
+	strncpy(FILE_NAME, s, 256);
+>>>>>>> acceebcaba30f1a4d401722270be32f748d3fc66
 	//IMAGE = img;
 	reload_image(0);
 }
@@ -71,6 +87,7 @@ void select_file(GObject *bouton)
 	{
 		char *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialogue));
 		strncpy(FILE_NAME, filename, 256);
+		printf("SELECTED FILE : %s\n", FILE_NAME);
 		//printf("%s\n", FILE_NAME);
 		g_free(filename);
 	}
@@ -82,13 +99,23 @@ void open_image_test()
 {
 	//Partie SDL
     SDL_Surface *image = SDL_LoadBMP(FILE_NAME);
+    printf("SDL loading img\n");
 
 	if(image->w > 720 && image->h > 480)
 	{
 		SDL_Surface *new_image = Resize(image, 720, 480);
+<<<<<<< HEAD
 		SDL_SaveBMP(new_image,"src/temp/new_image_resized.bmp");
 		if(realpath("src/temp/new_image_resized.bmp", FILE_NAME) == NULL)
 			return;
+=======
+		printf("RESIZED img\n");
+		SDL_SaveBMP(new_image,"../temp/new_image_resized.bmp");
+		printf("SAVED new bmp\n");
+		char *s = realpath("../temp/new_image_resized.bmp",FILE_NAME);
+		strncpy(FILE_NAME, s, 256);
+		printf("NEWfile name : %s\n", FILE_NAME);
+>>>>>>> acceebcaba30f1a4d401722270be32f748d3fc66
 		SDL_FreeSurface(new_image);
 	}
 
@@ -113,7 +140,7 @@ void reload_image(int assertion)
 	}
 	if (assertion == 0)
 	{
-		printf("%s\n", FILE_NAME);
+		printf("affichage : %s\n", FILE_NAME);
 		//GtkWidget *print_img_temp = g_object_ref(PRINT_IMAGE);
 		GtkWidget *print_img_temp = gtk_image_new_from_file(FILE_NAME);
 		gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);

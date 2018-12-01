@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <SDL.h>
 
+/*#include "src/image_manipulation/GTK_functions.h"
+#include "src/image_manipulation/to_binarize.h"
+#include "src/image_manipulation/SDL_functions.h"*/
 #include "GTK_functions.h"
 #include "to_binarize.h"
 #include "SDL_functions.h"
