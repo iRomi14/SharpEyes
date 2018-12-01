@@ -3,6 +3,8 @@
 
 #include "../matrix/matrix.h"
 
+#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,_"
+
 typedef struct NeuralNet {
   Matrix *weights;
   Matrix *part_d;

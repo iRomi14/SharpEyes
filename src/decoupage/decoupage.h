@@ -2,10 +2,11 @@
 #define DECOUPAGE_H
 
 # include <SDL.h>
-# include "../matrix/matrix.h"
+# include "../neural_net/nn.h"
 
 char Final_Text[10000];
 int nb_words;
+NN ocrNet;
 
 //*********************************************************************//
 //*************************** TOOLS ***********************************//

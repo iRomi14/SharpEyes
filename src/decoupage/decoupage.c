@@ -4,7 +4,6 @@
 
 # include "decoupage.h"
 # include "../pixel/pixel_operations.h"
-# include "../matrix/matrix.h"
 # include "../image_manipulation/SDL_functions.h"
 
 size_t idx = 0;
@@ -263,6 +262,8 @@ void isolateChar(SDL_Surface *img)
   int firstCut;
   int lastCut = -1;
   int lastRead = -1;
+  Vector v;
+  Matrix x, y_pred;
 
   for(int i = 0; i < img -> w; i++){
     if(i < lastRead)
@@ -304,13 +305,18 @@ void isolateChar(SDL_Surface *img)
           {
             SDL_Surface *resize = Resize(copy, 28, 28);
             //Détecter la lettre.
-            /*Vector v;
-            bmp_to_vector(&v, resize);
-            printVector(v);*/
-            double *letter = create_matrix(resize);
-            print_matrix(letter, 28, 28);
 
-            Final_Text[idx] = 'a';
+            bmp_to_vector(&v, resize);
+            initMatrix(&x, 1, v.size, false);
+            x.data[0] = v;
+            //printVector(v);
+            /*double *letter = create_matrix(resize);
+            print_matrix(letter, 28, 28);*/
+            y_pred = forward(ocrNet, x);
+
+            Final_Text[idx] = ALPHABET[argmax(y_pred.data[0])];
+
+            freeMatrix(x);
             idx++;
           }
 

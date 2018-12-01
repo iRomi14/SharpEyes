@@ -6,7 +6,7 @@
 # include "image_manipulation/to_binarize.h"
 # include "image_manipulation/SDL_functions.h"
 # include "decoupage/decoupage.h"
-# include "matrix/matrix.h"
+# include "neural_net/nn.h"
 
 
 /*
@@ -21,12 +21,23 @@
 #define HEIGHT 1080
 #define XTIME 500
 
+#define saveFile "ocr_weights.se"
+
 int main(){
 
 	SDL_version nb;
 	SDL_VERSION(&nb);
 	SDL_Window *fenetre;
 	SDL_Renderer *renderer;
+
+	ocrNet.layers = 2;
+
+	ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
+	ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
+
+	printf("loading Weights in %s\n", saveFile);
+
+  loadWeights(&ocrNet, saveFile);
 
 	printf ("Hello, you're on SDL %d.%d\n", nb.major, nb.minor);
 
@@ -56,7 +67,7 @@ int main(){
 	SDL_Surface *image;
 	SDL_Texture *texture;
 
-	image = SDL_LoadBMP("Banque Image/words/Lorem_2.bmp");
+	image = SDL_LoadBMP("Banque Image/words/wordOCR.bmp");
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
@@ -109,6 +120,8 @@ int main(){
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(fenetre);
 	SDL_Quit();
+
+	freeNeuralNet(ocrNet);
 
 	return 0;
 }
