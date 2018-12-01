@@ -1,56 +1,38 @@
 CC=gcc
+CFLAGS= -Wall -Wextra -Werror -std=c99 -O1 -I/usr/include/SDL2 -D_REENTRANT
+LDLIBS = -lm -L/usr/lib/x86_64-linux-gnu -lSDL2
 
-CFLAGS= -Wall -Wextra -Werror -std=c99 -O1
-MATHFLAGS= -lm
-SDLFLAGS = -I/usr/include/SDL2 -D_REENTRANT -L/usr/lib/x86_64-linux-gnu -lSDL2
+SRC_NN = src/neural_net/nn.c src/matrix/matrix.c src/matrix/vector.c
+SRC_SDL = src/pixel/pixel_operations.c src/image_manipulation/to_binarize.c src/image_manipulation/SDL_functions.c src/decoupage/decoupage.c
 
-main: src/main.o src/pixel_operations.o src/to_binarize.o src/sdl_functions.o src/decoupage.o src/matrix.o src/vector.o
-	$(CC) -o main src/main.o src/pixel_operations.o src/to_binarize.o src/sdl_functions.o src/decoupage.o src/matrix.o src/vector.o  $(SDLFLAGS) $(MATHFLAGS)
+# Main
+SRC = src/main.c ${SRC_NN} ${SRC_SDL}
+OBJ = ${SRC:.c=.o}
 
-src/main.o: src/main.c
-	$(CC) -o src/main.o -c src/main.c $(CFLAGS) $(SDLFLAGS)
+main: ${OBJ}
+	$(CC) -o main ${OBJ} ${CFLAGS} ${LDLIBS}
 
-src/pixel_operations.o: src/pixel/pixel_operations.c
-	$(CC) -o src/pixel_operations.o -c src/pixel/pixel_operations.c $(CFLAGS) $(SDLFLAGS)
+SRC_TRAIN = src/train.c ${SRC_NN} ${SRC_SDL}
+OBJ_TRAIN = ${SRC_TRAIN:.c=.o}
 
-src/sdl_functions.o: src/image_manipulation/SDL_functions.c
-	$(CC) -o src/sdl_functions.o -c src/image_manipulation/SDL_functions.c $(CFLAGS) $(SDLFLAGS)
-
-src/to_binarize.o: src/image_manipulation/to_binarize.c
-	$(CC) -o src/to_binarize.o -c src/image_manipulation/to_binarize.c $(CFLAGS) $(SDLFLAGS)
-
-src/decoupage.o: src/decoupage/decoupage.c src/matrix.o src/vector.o src/sdl_functions.o
-	$(CC) -o src/decoupage.o src/matrix.o src/vector.o src/sdl_functions.o -c src/decoupage/decoupage.c $(CFLAGS) $(SDLFLAGS) $(MATHFLAGS)
+train: ${OBJ_TRAIN}
+	$(CC) -o train ${OBJ_TRAIN} ${CFLAGS} ${LDLIBS}
 
 
-train: src/train.o src/pixel_operations.o src/to_binarize.o src/sdl_functions.o src/matrix.o src/vector.o src/nn.o
-	$(CC) -o train src/train.o src/pixel_operations.o src/to_binarize.o src/sdl_functions.o src/matrix.o src/vector.o src/nn.o  $(SDLFLAGS) $(MATHFLAGS)
+SRC_OCR = src/train.c ${SRC_NN} ${SRC_SDL}
+OBJ_OCR = ${SRC_OCR:.c=.o}
 
+ocrnn: ${OBJ_OCR}
+	$(CC) -o train ${OBJ_OCR} ${CFLAGS} ${LDLIBS}
 
-xornn: src/xor.o src/matrix.o src/vector.o src/nn.o
-	$(CC) -o xornn src/xor.o src/matrix.o src/vector.o src/nn.o $(MATHFLAGS)
+SRC_XOR = src/xor.c ${SRC_NN} ${SRC_SDL}
+OBJ_XOR = ${SRC_XOR:.c=.o}
 
-ocrnn: src/ocrnn.o src/pixel_operations.o src/to_binarize.o src/sdl_functions.o src/matrix.o src/vector.o src/nn.o
-	$(CC) -o ocrnn src/ocrnn.o src/pixel_operations.o src/to_binarize.o src/sdl_functions.o src/matrix.o src/vector.o src/nn.o $(SDLFLAGS) $(MATHFLAGS)
-
-
-src/train.o: src/train.c
-	$(CC) -o src/train.o -c src/train.c $(CFLAGS) $(SDLFLAGS)
-
-src/ocrnn.o: src/ocrnn.c
-	$(CC) -o src/ocrnn.o -c src/ocrnn.c $(CFLAGS) $(SDLFLAGS)
-
-src/xor.o: src/xor.c
-	$(CC) -o src/xor.o -c src/xor.c $(CFLAGS)
-
-src/nn.o: src/neural_net/nn.c
-	$(CC) -o src/nn.o -c src/neural_net/nn.c $(CFLAGS)
-
-src/matrix.o: src/matrix/matrix.c
-	$(CC) -o src/matrix.o -c src/matrix/matrix.c $(CFLAGS)
-
-src/vector.o: src/matrix/vector.c
-	$(CC) -o src/vector.o -c src/matrix/vector.c $(CFLAGS)
+xornn: ${OBJ_XOR}
+		$(CC) -o xornn ${OBJ_XOR} ${CFLAGS} ${LDLIBS}
 
 clean:
-	rm -rf src/*.o
+	${RM} ${OBJ}
+	${RM} ${OBJ_TRAIN}
+	${RM} ${OBJ_XOR}
+	${RM} ${OBJ_OCR}
