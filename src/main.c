@@ -30,13 +30,6 @@ int main(){
 
 	printf ("Hello, you're on SDL %d.%d\n", nb.major, nb.minor);
 
-
-	Final_Text = (char**)malloc(50*sizeof(char*));
-	for(int i = 0; i < nb_words; i++){
-		Final_Text[i] = (char*)malloc(15*sizeof(char));
-	}
-
-
 	//Lancement de SDL
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
 		SDL_ExitError("Initialisation SDL");
@@ -63,7 +56,7 @@ int main(){
 	SDL_Surface *image;
 	SDL_Texture *texture;
 
-	image = SDL_LoadBMP("Banque Image/words/wordsepita.bmp");
+	image = SDL_LoadBMP("Banque Image/words/Lorem_2.bmp");
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
@@ -77,6 +70,10 @@ int main(){
 	printf("Line Cuts\n");
 	isolateLine(image);
 	printf("Finish Treatment\n");
+	for (size_t i = 0; i < 10000; i++)
+        printf("%c",Final_Text[i]);
+	printf("\n");
+	printf("FINISH OCR\n");
 
 
 	//-------------------------------------------------------------------------//
@@ -113,11 +110,5 @@ int main(){
 	SDL_DestroyWindow(fenetre);
 	SDL_Quit();
 
-
-	for(int i = 0; i < nb_words; i++){
-		free(Final_Text[i]);
-	}
-
-	free(Final_Text);
 	return 0;
 }
