@@ -20,7 +20,7 @@ void on_window_main_destroy()
 void binarize_button()
 {
     otsu(IMAGE);
-    char *s = realpath("src/temp/binarized.bmp", NULL);
+    char *s = realpath("../temp/binarized.bmp", NULL);
     strncpy(FILE_NAME, s, 256);
     reload_image(0);
 }
@@ -28,8 +28,8 @@ void binarize_button()
 void draw_lines_button()
 {
 	SDL_Surface *img = draw_lines(IMAGE);
-	SDL_SaveBMP(img, "src/temp/rlsa.bmp");
-	char *s = realpath("src/temp/rlsa.bmp", NULL);
+	SDL_SaveBMP(img, "../temp/rlsa.bmp");
+	char *s = realpath("../temp/rlsa.bmp", NULL);
 	strncpy(FILE_NAME, s, 256);
 	reload_image(0);
 	SDL_FreeSurface(img);
@@ -38,7 +38,7 @@ void draw_lines_button()
 void grayscale_button()
 {
 	greyscale(IMAGE);
-	char *s = realpath("src/temp/grayscaled.bmp", NULL);
+	char *s = realpath("../temp/grayscaled.bmp", NULL);
 	strncpy(FILE_NAME, s, 256);
 	//IMAGE = img;
 	reload_image(0);
@@ -70,6 +70,7 @@ void select_file(GObject *bouton)
 	{
 		char *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialogue));
 		strncpy(FILE_NAME, filename, 256);
+		printf("SELECTED FILE : %s\n", FILE_NAME);
 		//printf("%s\n", FILE_NAME);
 		g_free(filename);
 	}
@@ -81,14 +82,17 @@ void open_image_test()
 {
 	//Partie SDL
     SDL_Surface *image = SDL_LoadBMP(FILE_NAME);
+    printf("SDL loading img\n");
 
 	if(image->w > 720 && image->h > 480)
 	{
 		SDL_Surface *new_image = Resize(image, 720, 480);
-		SDL_SaveBMP(new_image,"src/temp/new_image_resized.bmp");
-		char *s = realpath("src/temp/new_image_resized.bmp", NULL);
+		printf("RESIZED img\n");
+		SDL_SaveBMP(new_image,"../temp/new_image_resized.bmp");
+		printf("SAVED new bmp\n");
+		char *s = realpath("../temp/new_image_resized.bmp",FILE_NAME);
 		strncpy(FILE_NAME, s, 256);
-		printf("%s\n", s);
+		printf("NEWfile name : %s\n", FILE_NAME);
 		SDL_FreeSurface(new_image);
 	}
 
@@ -113,7 +117,7 @@ void reload_image(int assertion)
 	}
 	if (assertion == 0)
 	{
-		printf("%s\n", FILE_NAME);
+		printf("affichage : %s\n", FILE_NAME);
 		//GtkWidget *print_img_temp = g_object_ref(PRINT_IMAGE);
 		GtkWidget *print_img_temp = gtk_image_new_from_file(FILE_NAME);
 		gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);
