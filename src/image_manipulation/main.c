@@ -9,7 +9,7 @@
 /* 
     Compiler GTK + SDL: 
         gcc -o gladewin main.c open_image.c GTK_functions.c SDL_functions.c to_binarize.c ../pixel/pixel_operations.c ../decoupage/decoupage.c ../matrix/vector.c ../matrix/matrix.c
-        -Wall $(sdl2-config --cflags --libs) `pkg-config --cflags --libs gtk+-3.0` -export-dynamic
+        -Wall $(sdl2-config --cflags --libs) `pkg-config --cflags --libs gtk+-3.0` -export-dynamic -lm
     Compiler SDL : 
         gcc test.c -o exec $(sdl2-config --cflags --libs)
 */

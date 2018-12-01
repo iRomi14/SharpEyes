@@ -26,14 +26,19 @@ void binarize_button(GObject *object, gpointer user_data)
 
 void draw_lines_button(GObject *object, gpointer user_data)
 {
-	draw_lines(IMAGE);
+	SDL_Surface *img = draw_lines(IMAGE);
+	SDL_SaveBMP(img, "../temp/rlsa.bmp");
 	realpath("../temp/rlsa.bmp", FILE_NAME);
 	reload_image(0);
+	SDL_FreeSurface(img);
 }
 
 void grayscale_button(GObject *object, gpointer user_data)
 {
-    printf("Niveau de gris tmtc\n");
+	greyscale(IMAGE);
+	realpath("../temp/grayscaled.bmp", FILE_NAME);
+	//IMAGE = img;
+	reload_image(0);
 }
 
 void rotate_button(GObject *object, gpointer user_data)
@@ -62,7 +67,7 @@ void select_file(GObject *bouton)
 	{
 		char *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialogue));
 		strncpy(FILE_NAME, filename, 256);
-		printf("%s\n", FILE_NAME);
+		//printf("%s\n", FILE_NAME);
 		g_free(filename);
 	}
 	gtk_widget_destroy(dialogue);
@@ -100,7 +105,6 @@ void reload_image(int assertion)
 		PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
 		gtk_container_add(GTK_CONTAINER(FRAME), PRINT_IMAGE);
     	gtk_widget_show(PRINT_IMAGE);
-    	printf("Fisrt gb : %p\n", PRINT_IMAGE);
 	}
 	if (assertion == 0)
 	{
@@ -111,7 +115,6 @@ void reload_image(int assertion)
 		gtk_container_add(GTK_CONTAINER(FRAME), print_img_temp);
     	gtk_widget_show(print_img_temp);
 		PRINT_IMAGE = print_img_temp;
-		printf("global : %p  / internal : %p\n", PRINT_IMAGE, print_img_temp);
 		//FRAME = gtk_builder_get_object(BUILDER, "frame");
 		//PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
 		//reload_image(1);

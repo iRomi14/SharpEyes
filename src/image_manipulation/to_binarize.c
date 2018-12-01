@@ -43,6 +43,7 @@ void greyscale(SDL_Surface *img)
             put_pixel(img, i, j, SDL_MapRGB(img->format, Lum, Lum, Lum));
         }
     }
+	SDL_SaveBMP(img, "../temp/grayscaled.bmp");
 }
 
 
