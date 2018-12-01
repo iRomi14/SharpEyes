@@ -108,9 +108,9 @@ void open_image_test()
 	//Partie SDL
     SDL_Surface *image = SDL_LoadBMP(FILE_NAME);
 
-	if(image->w > 720 && image->h > 480)
+	if(image->w > 1080 && image->h > 720)
 	{
-		SDL_Surface *new_image = Resize(image, 720, 480);
+		SDL_Surface *new_image = Resize(image, 1080, 720);
 		SDL_SaveBMP(new_image,"src/temp/new_image_resized.bmp");
 		if(realpath("src/temp/new_image_resized.bmp", FILE_NAME) == NULL)
 			return;

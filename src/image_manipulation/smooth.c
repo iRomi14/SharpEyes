@@ -33,14 +33,14 @@ int neighbors(SDL_Surface *img, int i, int j, int w, int h)
 	Uint32 pixel;
 	//Uint8 r, g, b;
 
-	pixel = get_pixel(img, (i+1)%w, j); /*SDL_GetRGB(pixel, img->format, &r, &g, &b);*/ tab[0] = pixel;
-	pixel = get_pixel(img, (i-1)%w, j); /*SDL_GetRGB(pixel, img->format, &r, &g, &b);*/ tab[1] = pixel;
-	pixel = get_pixel(img, i, (j+1)%h); /*SDL_GetRGB(pixel, img->format, &r, &g, &b);*/ tab[2] = pixel;
-	pixel = get_pixel(img, i, (j-1)%h); /*SDL_GetRGB(pixel, img->format, &r, &g, &b);*/ tab[3] = pixel;
-	pixel = get_pixel(img, (i+1)%w, (j+1)%h); /*SDL_GetRGB(pixel, img->format, &r, &g, &b);*/ tab[4] = pixel;
-	pixel = get_pixel(img, (i-1)%w, (j-1)%h); /*SDL_GetRGB(pixel, img->format, &r, &g, &b);*/ tab[5] = pixel;
-	pixel = get_pixel(img, (i+1)%w, (j-1)%h); /*SDL_GetRGB(pixel, img->format, &r, &g, &b);*/ tab[6] = pixel;
-	pixel = get_pixel(img, (i-1)%w, (j+1)%h); /*SDL_GetRGB(pixel, img->format, &r, &g, &b);*/ tab[7] = pixel;
+	pixel = get_pixel(img, mod(i+1, w), j); tab[0] = pixel;
+	pixel = get_pixel(img, mod(i-1, w), j); tab[1] = pixel;
+	pixel = get_pixel(img, i, mod(j+1,h)); tab[2] = pixel;
+	pixel = get_pixel(img, i, mod(j-1,h)); tab[3] = pixel;
+	pixel = get_pixel(img, mod(i+1, w), mod(j+1,h)); tab[4] = pixel;
+	pixel = get_pixel(img, mod(i-1, w), mod(j-1,h)); tab[5] = pixel;
+	pixel = get_pixel(img, mod(i+1, w), mod(j-1,h)); tab[6] = pixel;
+	pixel = get_pixel(img, mod(i-1, w), mod(j+1,h)); tab[7] = pixel;
 
 	return black_or_white(img, tab);
 }
@@ -66,4 +66,10 @@ int black_or_white(SDL_Surface *img, int *tab)
 		return 1;
 	else
 		return -1;
+}
+
+int mod (int a, int b)
+{
+	int r = a % b;
+	return r < 0 ? r + b : r;
 }
