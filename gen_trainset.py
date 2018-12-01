@@ -17,8 +17,8 @@ for font in os.listdir(fonts_dir):
 
             img = Image.new("RGB", (28,28), (255,255,255))
             draw = ImageDraw.Draw(img)
-            loaded_font = ImageFont.truetype(os.path.join(fonts_dir, font), size=24)
-            draw.text((4,-4), c, font=loaded_font, fill=(0,0,0))
+            loaded_font = ImageFont.truetype(os.path.join(fonts_dir, font), size=20)
+            draw.text((4,0), c, font=loaded_font, fill=(0,0,0))
             #img.show()
 
             save_dir = os.path.join(train_dir, c)
