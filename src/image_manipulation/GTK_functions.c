@@ -9,44 +9,47 @@
 #include "GTK_functions.h"
 #include "SDL_functions.h"
 #include "../decoupage/decoupage.h"
-
-void on_window_main_destroy(GObject *object, gpointer user_data)
+//GObject *object, gpointer user_data
+void on_window_main_destroy()
 {
 	g_object_unref(BUILDER);
 	SDL_FreeSurface(IMAGE);
     gtk_main_quit();
 }
 
-void binarize_button(GObject *object, gpointer user_data)
+void binarize_button()
 {
     otsu(IMAGE);
-    realpath("../temp/binarized.bmp", FILE_NAME);
+    char *s = realpath("src/temp/binarized.bmp", NULL);
+    strncpy(FILE_NAME, s, 256);
     reload_image(0);
 }
 
-void draw_lines_button(GObject *object, gpointer user_data)
+void draw_lines_button()
 {
 	SDL_Surface *img = draw_lines(IMAGE);
-	SDL_SaveBMP(img, "../temp/rlsa.bmp");
-	realpath("../temp/rlsa.bmp", FILE_NAME);
+	SDL_SaveBMP(img, "src/temp/rlsa.bmp");
+	char *s = realpath("src/temp/rlsa.bmp", NULL);
+	strncpy(FILE_NAME, s, 256);
 	reload_image(0);
 	SDL_FreeSurface(img);
 }
 
-void grayscale_button(GObject *object, gpointer user_data)
+void grayscale_button()
 {
 	greyscale(IMAGE);
-	realpath("../temp/grayscaled.bmp", FILE_NAME);
+	char *s = realpath("src/temp/grayscaled.bmp", NULL);
+	strncpy(FILE_NAME, s, 256);
 	//IMAGE = img;
 	reload_image(0);
 }
 
-void rotate_button(GObject *object, gpointer user_data)
+void rotate_button()
 {
     printf("Rotation en loosdé\n");
 }
 
-void smoothy_button(GObject *object, gpointer user_data)
+void smoothy_button()
 {
     printf("Le beau lissage Starfoulaye\n");
 }
@@ -82,8 +85,10 @@ void open_image_test()
 	if(image->w > 720 && image->h > 480)
 	{
 		SDL_Surface *new_image = Resize(image, 720, 480);
-		SDL_SaveBMP(new_image,"../temp/new_image_resized.bmp");
-		realpath("../temp/new_image_resized.bmp", FILE_NAME);
+		SDL_SaveBMP(new_image,"src/temp/new_image_resized.bmp");
+		char *s = realpath("src/temp/new_image_resized.bmp", NULL);
+		strncpy(FILE_NAME, s, 256);
+		printf("%s\n", s);
 		SDL_FreeSurface(new_image);
 	}
 
