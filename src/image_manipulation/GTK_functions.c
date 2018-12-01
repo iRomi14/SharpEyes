@@ -5,11 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "smooth.h"
 #include "to_binarize.h"
 #include "GTK_functions.h"
 #include "SDL_functions.h"
 #include "../decoupage/decoupage.h"
-//GObject *object, gpointer user_data
+
 void on_window_main_destroy()
 {
 	g_object_unref(BUILDER);
@@ -20,7 +21,7 @@ void on_window_main_destroy()
 void binarize_button()
 {
     otsu(IMAGE);
-		SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
+	SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
     if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
 			return;
     reload_image(0);
@@ -42,7 +43,6 @@ void grayscale_button()
 	SDL_SaveBMP(IMAGE, "src/temp/grayscaled.bmp");
 	if(realpath("src/temp/grayscaled.bmp", FILE_NAME) == NULL)
 		return;
-	//IMAGE = img;
 	reload_image(0);
 }
 
@@ -53,7 +53,16 @@ void rotate_button()
 
 void smoothy_button()
 {
-    printf("Le beau lissage Starfoulaye\n");
+    remove_dots(IMAGE);
+    SDL_SaveBMP(IMAGE, "src/temp/smoothed.bmp");
+    if(realpath("src/temp/smoothed.bmp", FILE_NAME) == NULL)
+		return;
+	reload_image(0);
+}
+
+void start_OCR()
+{
+	printf("MDR t'as cru que c'etait fait ?\n");
 }
 
 void select_file(GObject *bouton)
@@ -72,8 +81,7 @@ void select_file(GObject *bouton)
 	{
 		char *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialogue));
 		strncpy(FILE_NAME, filename, 256);
-		printf("SELECTED FILE : %s\n", FILE_NAME);
-		//printf("%s\n", FILE_NAME);
+		//printf("SELECTED FILE : %s\n", FILE_NAME);
 		g_free(filename);
 	}
 	gtk_widget_destroy(dialogue);
@@ -84,7 +92,6 @@ void open_image_test()
 {
 	//Partie SDL
     SDL_Surface *image = SDL_LoadBMP(FILE_NAME);
-    printf("SDL loading img\n");
 
 	if(image->w > 720 && image->h > 480)
 	{
@@ -106,7 +113,6 @@ void open_image_test()
 
 void reload_image(int assertion)
 {
-	//GObject *frame = gtk_builder_get_object(BUILDER, "frame");
 	if (assertion == 1)
 	{
 		FRAME = gtk_builder_get_object(BUILDER, "frame");
@@ -117,21 +123,10 @@ void reload_image(int assertion)
 	if (assertion == 0)
 	{
 		printf("affichage : %s\n", FILE_NAME);
-		//GtkWidget *print_img_temp = g_object_ref(PRINT_IMAGE);
 		GtkWidget *print_img_temp = gtk_image_new_from_file(FILE_NAME);
 		gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);
 		gtk_container_add(GTK_CONTAINER(FRAME), print_img_temp);
     	gtk_widget_show(print_img_temp);
 		PRINT_IMAGE = print_img_temp;
-		//FRAME = gtk_builder_get_object(BUILDER, "frame");
-		//PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
-		//reload_image(1);
 	}
-
-	//GtkWidget *img;
-	//PRINT_IMAGE = gtk_image_new_from_file(FILE_NAME);
-
-	//gtk_container_add(GTK_CONTAINER(FRAME), PRINT_IMAGE);
-    //gtk_widget_show(PRINT_IMAGE);
-    //gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);
 }

@@ -3,7 +3,7 @@ CFLAGS= -Wall -Wextra -std=c99 -O1 -I/usr/include/SDL2 -D_REENTRANT `pkg-config 
 LDLIBS = -lm -L/usr/lib/x86_64-linux-gnu -lSDL2
 
 SRC_NN = src/neural_net/nn.c src/matrix/matrix.c src/matrix/vector.c
-SRC_SDL = src/pixel/pixel_operations.c src/image_manipulation/to_binarize.c src/image_manipulation/SDL_functions.c src/decoupage/decoupage.c
+SRC_SDL = src/pixel/pixel_operations.c src/image_manipulation/to_binarize.c src/image_manipulation/smooth.c src/image_manipulation/SDL_functions.c src/decoupage/decoupage.c
 
 # Main
 SRC = src/image_manipulation/main.c src/image_manipulation/open_image.c src/image_manipulation/GTK_functions.c ${SRC_NN} ${SRC_SDL}

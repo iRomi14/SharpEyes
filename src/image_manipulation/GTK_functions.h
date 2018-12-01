@@ -16,6 +16,7 @@ void draw_lines_button();
 void grayscale_button();
 void rotate_button();
 void smoothy_button();
+void start_OCR();
 
 void select_file(GObject *bouton);
 void open_image_test();

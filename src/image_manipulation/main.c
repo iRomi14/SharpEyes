@@ -64,6 +64,10 @@ int main(int argc, char *argv[])
     GObject *smooth_button = gtk_builder_get_object(BUILDER, "lissage");
     g_signal_connect (smooth_button, "activate", G_CALLBACK (smoothy_button), NULL);
 
+    //Start OCR
+    GObject *start = gtk_builder_get_object(BUILDER, "Start");
+    g_signal_connect (start, "select", G_CALLBACK (start_OCR), NULL);
+
     //---------- FIN FONCTION SUR LES BOUTONS ----------//
     //g_object_unref(BUILDER);
  

@@ -118,6 +118,14 @@
           </object>
         </child>
         <child>
+          <object class="GtkMenuItem" id="Start">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Start</property>
+            <property name="use_underline">True</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkMenuItem" id="quit">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
