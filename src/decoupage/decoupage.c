@@ -133,7 +133,8 @@ SDL_Surface* draw_lines(SDL_Surface *img)
       {
           for(int k = 0; k < width; k++){
             pixel = SDL_MapRGB(img_copy -> format, 255, 0, 0);
-            put_pixel(img_copy, k, i - 1, pixel);
+            if(i > 0)
+              put_pixel(img_copy, k, i - 1, pixel);
           }
           firstCut = 0;
       }
@@ -151,7 +152,7 @@ SDL_Surface* draw_lines(SDL_Surface *img)
 }
 
 /* Isolate the lines */
-void isolateLine(SDL_Surface *img)
+SDL_Surface* isolateLine(SDL_Surface *img)
 {
   /* Variables */
   Uint32 pixel;
@@ -180,7 +181,7 @@ void isolateLine(SDL_Surface *img)
         {
           lastCut = j;
           // One isole la ligne découpé avec les lettres (dedans) dans une surface.
-          cutSurface(img, firstCut, lastCut);
+          img = cutSurface(img, firstCut, lastCut);
           Final_Text[idx] = ' ';
           idx++;
           break;
@@ -188,10 +189,11 @@ void isolateLine(SDL_Surface *img)
       }
     }
   }
+  return img;
 }
 
 /* Display the isolated cuts */
-void cutSurface(SDL_Surface *img, int firstCut,int lastCut)
+SDL_Surface* cutSurface(SDL_Surface *img, int firstCut,int lastCut)
 {
   //Créer une surface qui contient la zone a découpé;
   SDL_Surface* copy = SDL_CreateRGBSurface(0,img -> w,lastCut - firstCut,
@@ -205,7 +207,8 @@ void cutSurface(SDL_Surface *img, int firstCut,int lastCut)
   }
   //Cut the characters
   draw_sperate_char(copy);
-  isolateChar(copy);
+  copy = isolateChar(copy);
+  return copy;
 }
 
 //******************************************************************************//
@@ -255,7 +258,7 @@ void draw_sperate_char(SDL_Surface *img)
   }
 }
 
-void isolateChar(SDL_Surface *img)
+SDL_Surface* isolateChar(SDL_Surface *img)
 {
   /*Variables*/
   Uint32 pixel;
@@ -302,19 +305,22 @@ void isolateChar(SDL_Surface *img)
 
           if(isSpace(copy) == 0)
           {
-            SDL_Surface *resize = Resize(copy, 28, 28);
+            return Resize(copy, 28, 28);
+
+
+            //double *letter = create_matrix(resize);
+            //print_matrix(letter, 28, 28);
             //Détecter la lettre.
             /*Vector v;
             bmp_to_vector(&v, resize);
-            printVector(v);*/
-            double *letter = create_matrix(resize);
-            print_matrix(letter, 28, 28);
+            printVector(v);
+
 
             Final_Text[idx] = 'a';
-            idx++;
+            idx++;*/
           }
 
-          if(copy -> w > 5 && isSpace(copy) == 1)
+          if(copy->w > 5 && isSpace(copy) == 1)
           {
             Final_Text[idx] = ' ';
             idx++;

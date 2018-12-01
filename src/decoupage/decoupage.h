@@ -25,9 +25,9 @@ int isSpace(SDL_Surface* img);
 
 SDL_Surface* draw_lines(SDL_Surface *img);
 
-void isolateLine(SDL_Surface *img);
+SDL_Surface* isolateLine(SDL_Surface *img);
 
-void cutSurface(SDL_Surface *img, int firstCut, int lastCut);
+SDL_Surface* cutSurface(SDL_Surface *img, int firstCut, int lastCut);
 
 //******************************************************************************//
 //******************** ADJUSTEMENT OF CHARACTERS *******************************//
@@ -35,6 +35,6 @@ void cutSurface(SDL_Surface *img, int firstCut, int lastCut);
 
 void draw_sperate_char(SDL_Surface *img);
 
-void isolateChar(SDL_Surface *img);
+SDL_Surface* isolateChar(SDL_Surface *img);
 
 #endif

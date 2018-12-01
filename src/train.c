@@ -10,7 +10,7 @@
 
 #include "neural_net/nn.h"
 
-#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,_"
 #define saveFile "ocr_weights_2.se"
 
 #define HLAYER 64
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
   initMatrix(&ocrNet.weights[1], HLAYER, N, true);
   //initMatrix(&xorNet.weights[1], 64, , true);
 
-  SDL_Surface *image;
+  SDL_Surface *image, *processed;
 
   char buffer[64];
 
@@ -70,7 +70,12 @@ int main(int argc, char *argv[]){
 
       train_y.data[i*variants+j].data[i] = 1.0; // one hot encoding
       to_binarize(image);
-      bmp_to_vector(&v, image);
+			processed = draw_lines(image);
+			processed = isolateLine(processed);
+			//SDL_SaveBMP(image, "./draw_lines.bmp");
+			//double *letter = create_matrix(processed);
+			//print_matrix(letter, 28, 28);
+      bmp_to_vector(&v, processed);
 
       train_x.data[i*variants+j] = v;
     }

@@ -24,11 +24,11 @@ OBJ_TRAIN = ${SRC_TRAIN:.c=.o}
 train: ${OBJ_TRAIN}
 	$(CC) -o train ${OBJ_TRAIN} ${CFLAGS} ${LDLIBS}
 
-SRC_OCR = src/train.c ${SRC_NN} ${SRC_SDL}
+SRC_OCR = src/ocrnn.c ${SRC_NN} ${SRC_SDL}
 OBJ_OCR = ${SRC_OCR:.c=.o}
 
 ocrnn: ${OBJ_OCR}
-	$(CC) -o train ${OBJ_OCR} ${CFLAGS} ${LDLIBS}
+	$(CC) -o ocrnn ${OBJ_OCR} ${CFLAGS} ${LDLIBS}
 
 SRC_XOR = src/xor.c ${SRC_NN} ${SRC_SDL}
 OBJ_XOR = ${SRC_XOR:.c=.o}

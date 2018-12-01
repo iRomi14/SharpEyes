@@ -10,8 +10,8 @@
 
 #include "neural_net/nn.h"
 
-#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-#define saveFile "ocr_weights_2.se"
+#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,_"
+#define saveFile "ocr_weights.se"
 
 int main(int argc, char *argv[]){
   srand (time(NULL));
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
   /*initMatrix(&ocrNet.weights[0], 784, 62, true);
   initMatrix(&ocrNet.weights[1], 62, 62, true);*/
 
-  SDL_Surface *image;
+  SDL_Surface *image, *processed;
 
   char buffer[64];
 
@@ -63,9 +63,11 @@ int main(int argc, char *argv[]){
       if (image == NULL)
         exit(-1);
 
-      train_y.data[i*variants+j].data[i] = 1.0;
+      train_y.data[i*variants+j].data[i] = 1.0; // one hot encoding
       to_binarize(image);
-      bmp_to_vector(&v, image);
+			processed = draw_lines(image);
+			processed = isolateLine(processed);
+      bmp_to_vector(&v, processed);
 
       train_x.data[i*variants+j] = v;
     }

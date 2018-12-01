@@ -4,7 +4,7 @@ import os
 train_dir = "Banque Image/training"
 fonts_dir = "Banque Image/fonts"
 
-alphabet= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+alphabet= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,."
 #fonts = ["PlayfairDisplay-Regular", "Roboto-Regular", "Slabo27px-Regular"]
 
 #for i in range(len(fonts)):
@@ -20,7 +20,8 @@ for font in os.listdir(fonts_dir):
             loaded_font = ImageFont.truetype(os.path.join(fonts_dir, font), size=20)
             draw.text((4,0), c, font=loaded_font, fill=(0,0,0))
             #img.show()
-
+            if c == '.':
+                c = '_'
             save_dir = os.path.join(train_dir, c)
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)

@@ -21,7 +21,7 @@ void on_window_main_destroy()
 void binarize_button()
 {
     otsu(IMAGE);
-	SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
+		SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
     if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
 			return;
     reload_image(0);
