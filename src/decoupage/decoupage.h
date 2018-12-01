@@ -4,7 +4,7 @@
 # include <SDL.h>
 # include "../matrix/matrix.h"
 
-char **Final_Text;
+char Final_Text[10000];
 int nb_words;
 
 //*********************************************************************//

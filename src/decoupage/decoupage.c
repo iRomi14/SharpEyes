@@ -7,6 +7,8 @@
 # include "../matrix/matrix.h"
 # include "../image_manipulation/SDL_functions.h"
 
+size_t idx = 0;
+
 /*
 **  SEGMENTATION
 **  file: segmentation.c
@@ -47,10 +49,9 @@ void print_matrix(double mat[], size_t lines, size_t cols)
     {
 				printf("[");
         for(size_t j = 0; j < cols; j++)
-            printf("%d ", (int)mat[j + i * cols]);
+            printf("%d", (int)mat[j + i * cols]);
 
-	printf("]");
-        printf("\n");
+	      printf("]\n");
     }
     printf("\n");
 }
@@ -180,6 +181,8 @@ void isolateLine(SDL_Surface *img)
           lastCut = j;
           // One isole la ligne découpé avec les lettres (dedans) dans une surface.
           cutSurface(img, firstCut, lastCut);
+          Final_Text[idx] = ' ';
+          idx++;
           break;
         }
       }
@@ -251,6 +254,7 @@ void draw_sperate_char(SDL_Surface *img)
     }
   }
 }
+
 void isolateChar(SDL_Surface *img)
 {
   /*Variables*/
@@ -295,7 +299,8 @@ void isolateChar(SDL_Surface *img)
               put_pixel(copy, w, h, pixel);
             }
           }
-          if(copy -> w > 5 || (isSpace(copy) == 0))
+
+          if(isSpace(copy) == 0)
           {
             SDL_Surface *resize = Resize(copy, 28, 28);
             //Détecter la lettre.
@@ -304,6 +309,15 @@ void isolateChar(SDL_Surface *img)
             printVector(v);*/
             double *letter = create_matrix(resize);
             print_matrix(letter, 28, 28);
+
+            Final_Text[idx] = 'a';
+            idx++;
+          }
+
+          if(copy -> w > 5 && isSpace(copy) == 1)
+          {
+            Final_Text[idx] = ' ';
+            idx++;
           }
           break;
         }
