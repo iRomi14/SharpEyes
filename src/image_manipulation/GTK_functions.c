@@ -77,7 +77,18 @@ void smoothy_button()
 
 void start_OCR()
 {
-	printf("MDR t'as cru que c'etait fait ?\n");
+	if (PRINT_IMAGE)
+	{
+		binarize_button();
+		inverse(IMAGE);
+		draw_lines_button();
+		isolateLine(IMAGE);
+		SDL_SaveBMP(IMAGE, "src/temp/isolated.bmp");
+    	if(realpath("src/temp/isolated.bmp", FILE_NAME) == NULL)
+    		return;
+    	reload_image(0);
+    	printf("OCR done\n");
+	}
 }
 
 void select_file(GObject *bouton)
