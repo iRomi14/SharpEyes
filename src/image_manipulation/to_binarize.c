@@ -113,7 +113,7 @@ void otsu(SDL_Surface *img)
                 put_pixel(img, i, j, SDL_MapRGB(img->format, 0,0,0));
         }
     }
-	SDL_SaveBMP(img, "../temp/binarized.bmp");
+	//SDL_SaveBMP(img, "../temp/binarized.bmp");
 }
 
 //******************************************************************************//
@@ -126,14 +126,14 @@ void inverse (SDL_Surface *img)
 	int pixNoir = 0;
 	Uint32 pix;
     Uint8 r, g, b;
-    
+
     for (int i = 0; i < img->w; ++i)
 	{
 		for (int j = 0; j < img->h; ++j)
 		{
 			pix = get_pixel(img, i, j);
             SDL_GetRGB(pix, img->format, &r, &g, &b);
-			
+
 			if ( r == 255)
 			{
 				pixBlanc += 1;

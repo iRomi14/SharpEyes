@@ -20,8 +20,9 @@ void on_window_main_destroy()
 void binarize_button()
 {
     otsu(IMAGE);
-    char *s = realpath("src/temp/binarized.bmp", NULL);
-    strncpy(FILE_NAME, s, 256);
+		SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
+    if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
+			return;
     reload_image(0);
 }
 
@@ -29,8 +30,8 @@ void draw_lines_button()
 {
 	SDL_Surface *img = draw_lines(IMAGE);
 	SDL_SaveBMP(img, "src/temp/rlsa.bmp");
-	char *s = realpath("src/temp/rlsa.bmp", NULL);
-	strncpy(FILE_NAME, s, 256);
+	if(realpath("src/temp/rlsa.bmp", FILE_NAME) == NULL)
+		return;
 	reload_image(0);
 	SDL_FreeSurface(img);
 }
@@ -38,8 +39,8 @@ void draw_lines_button()
 void grayscale_button()
 {
 	greyscale(IMAGE);
-	char *s = realpath("src/temp/grayscaled.bmp", NULL);
-	strncpy(FILE_NAME, s, 256);
+	if(realpath("src/temp/grayscaled.bmp", FILE_NAME) == NULL)
+		return;
 	//IMAGE = img;
 	reload_image(0);
 }
@@ -58,8 +59,8 @@ void select_file(GObject *bouton)
 {
 	gint res;
 	GtkWidget *topparent = gtk_widget_get_toplevel(GTK_WIDGET(bouton));
-	GtkWidget *dialogue = gtk_file_chooser_dialog_new("Select Image", 
-														GTK_WINDOW (topparent), 
+	GtkWidget *dialogue = gtk_file_chooser_dialog_new("Select Image",
+														GTK_WINDOW (topparent),
 														GTK_FILE_CHOOSER_ACTION_OPEN,
 														"Ouvrir", GTK_RESPONSE_ACCEPT,
 														"Annuler", GTK_RESPONSE_CANCEL,
@@ -86,9 +87,8 @@ void open_image_test()
 	{
 		SDL_Surface *new_image = Resize(image, 720, 480);
 		SDL_SaveBMP(new_image,"src/temp/new_image_resized.bmp");
-		char *s = realpath("src/temp/new_image_resized.bmp", NULL);
-		strncpy(FILE_NAME, s, 256);
-		printf("%s\n", s);
+		if(realpath("src/temp/new_image_resized.bmp", FILE_NAME) == NULL)
+			return;
 		SDL_FreeSurface(new_image);
 	}
 

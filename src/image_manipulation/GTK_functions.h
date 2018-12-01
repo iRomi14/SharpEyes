@@ -4,7 +4,7 @@
 #include <gtk/gtk.h>
 #include <SDL.h>
 
-char FILE_NAME[256];
+char FILE_NAME[PATH_MAX];
 GtkBuilder *BUILDER;
 GtkWidget *PRINT_IMAGE;
 GObject *FRAME;

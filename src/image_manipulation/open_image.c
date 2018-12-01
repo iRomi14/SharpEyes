@@ -58,7 +58,7 @@ void sdl_main(){
 	SDL_Surface *image;
 	SDL_Texture *texture;
 
-	image = SDL_LoadBMP("../../Banque Image/words/test2.bmp");
+	image = SDL_LoadBMP("Banque Image/words/test2.bmp");
 
 	if (image == NULL)
 		SDL_ExitSupress("Image non crée", renderer, fenetre);
