@@ -20,29 +20,18 @@ void on_window_main_destroy()
 void binarize_button()
 {
     otsu(IMAGE);
-<<<<<<< HEAD
 		SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
     if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
 			return;
-=======
-    char *s = realpath("../temp/binarized.bmp", NULL);
-    strncpy(FILE_NAME, s, 256);
->>>>>>> acceebcaba30f1a4d401722270be32f748d3fc66
     reload_image(0);
 }
 
 void draw_lines_button()
 {
 	SDL_Surface *img = draw_lines(IMAGE);
-<<<<<<< HEAD
 	SDL_SaveBMP(img, "src/temp/rlsa.bmp");
 	if(realpath("src/temp/rlsa.bmp", FILE_NAME) == NULL)
 		return;
-=======
-	SDL_SaveBMP(img, "../temp/rlsa.bmp");
-	char *s = realpath("../temp/rlsa.bmp", NULL);
-	strncpy(FILE_NAME, s, 256);
->>>>>>> acceebcaba30f1a4d401722270be32f748d3fc66
 	reload_image(0);
 	SDL_FreeSurface(img);
 }
@@ -50,13 +39,9 @@ void draw_lines_button()
 void grayscale_button()
 {
 	greyscale(IMAGE);
-<<<<<<< HEAD
+	SDL_SaveBMP(IMAGE, "src/temp/grayscaled.bmp");
 	if(realpath("src/temp/grayscaled.bmp", FILE_NAME) == NULL)
 		return;
-=======
-	char *s = realpath("../temp/grayscaled.bmp", NULL);
-	strncpy(FILE_NAME, s, 256);
->>>>>>> acceebcaba30f1a4d401722270be32f748d3fc66
 	//IMAGE = img;
 	reload_image(0);
 }
@@ -104,18 +89,9 @@ void open_image_test()
 	if(image->w > 720 && image->h > 480)
 	{
 		SDL_Surface *new_image = Resize(image, 720, 480);
-<<<<<<< HEAD
 		SDL_SaveBMP(new_image,"src/temp/new_image_resized.bmp");
 		if(realpath("src/temp/new_image_resized.bmp", FILE_NAME) == NULL)
 			return;
-=======
-		printf("RESIZED img\n");
-		SDL_SaveBMP(new_image,"../temp/new_image_resized.bmp");
-		printf("SAVED new bmp\n");
-		char *s = realpath("../temp/new_image_resized.bmp",FILE_NAME);
-		strncpy(FILE_NAME, s, 256);
-		printf("NEWfile name : %s\n", FILE_NAME);
->>>>>>> acceebcaba30f1a4d401722270be32f748d3fc66
 		SDL_FreeSurface(new_image);
 	}
 
