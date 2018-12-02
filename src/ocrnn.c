@@ -11,7 +11,7 @@
 #include "neural_net/nn.h"
 
 //#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-#define saveFile "res/ocr_weights_arial.se"
+#define saveFile "res/ocr_weights_2.se"
 
 int main(int argc, char *argv[]){
   srand (time(NULL));
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
 
   NN ocrNet;
-  ocrNet.layers = 2;
+  ocrNet.layers = 3;
 
   ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
   ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
   char buffer[64];
 
   char train_dir[] = "Banque Image/training/";
-  char image_name[] = "x.bmp";
+  char image_name[] = "x/xx.bmp";
 
   Matrix train_x;
   Matrix train_y;
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
   for (size_t i = 0; i < N; i++){
     for(size_t j = 0; j < variants; j++){
 
-      sprintf(image_name, "%c.bmp", ALPHABET[i]);
+      sprintf(image_name, "%c/%02zu.bmp", ALPHABET[i] != '.' ? ALPHABET[i] : '_', j);
       strcpy(buffer, train_dir);
 
       //printf("%s\n", strncat(buffer, image_name, 64));

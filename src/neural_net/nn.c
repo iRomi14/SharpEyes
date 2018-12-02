@@ -1,6 +1,6 @@
 #include "nn.h"
 
-double learning_rate = 0.2;
+double learning_rate = 0.08;
 
 Matrix forward(NN neuralNet, Matrix in){
   Matrix out = in;
