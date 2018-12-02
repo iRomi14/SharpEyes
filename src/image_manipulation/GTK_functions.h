@@ -3,6 +3,7 @@
 
 #include <gtk/gtk.h>
 #include <SDL.h>
+#include "../decoupage/decoupage.h"
 
 char FILE_NAME[PATH_MAX];
 GtkBuilder *BUILDER;

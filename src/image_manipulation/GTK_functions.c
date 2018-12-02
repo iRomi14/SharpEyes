@@ -9,7 +9,6 @@
 #include "to_binarize.h"
 #include "GTK_functions.h"
 #include "SDL_functions.h"
-#include "../decoupage/decoupage.h"
 
 void on_window_main_destroy()
 {
@@ -81,13 +80,14 @@ void start_OCR()
 	{
 		binarize_button();
 		inverse(IMAGE);
-		draw_lines_button();
-		isolateLine(IMAGE);
-		SDL_SaveBMP(IMAGE, "src/temp/isolated.bmp");
-    	if(realpath("src/temp/isolated.bmp", FILE_NAME) == NULL)
-    		return;
-    	reload_image(0);
-    	printf("OCR done\n");
+		//draw_lines_button();
+		SDL_Surface *img =draw_lines(IMAGE);
+		isolateLine(img);
+		for (size_t i = 0; i < 10000; i++)
+	        printf("%c",Final_Text[i]);
+		printf("\n");
+  	printf("OCR done\n");
+		SDL_FreeSurface(img);
 	}
 }
 

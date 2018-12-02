@@ -9,11 +9,13 @@
 #include "to_binarize.h"
 #include "SDL_functions.h"
 
-/* 
-    Compiler GTK + SDL: 
+#define saveFile "ocr_weights.se"
+
+/*
+    Compiler GTK + SDL:
         gcc -o gladewin main.c open_image.c GTK_functions.c SDL_functions.c to_binarize.c ../pixel/pixel_operations.c ../decoupage/decoupage.c ../matrix/vector.c ../matrix/matrix.c
         -Wall $(sdl2-config --cflags --libs) `pkg-config --cflags --libs gtk+-3.0` -export-dynamic -lm
-    Compiler SDL : 
+    Compiler SDL :
         gcc test.c -o exec $(sdl2-config --cflags --libs)
 */
 
@@ -23,12 +25,21 @@ int main(int argc, char *argv[])
 	//GtkBuilder  *builder;
 	GtkWidget   *window;
 
+	ocrNet.layers = 2;
+
+	ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
+	ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
+
+	printf("loading Weights in %s\n", saveFile);
+
+  loadWeights(&ocrNet, saveFile);
+
 	gtk_init(&argc, &argv);
- 
+
     //builder = gtk_builder_new();
     BUILDER = gtk_builder_new();
     gtk_builder_add_from_file (BUILDER, "window_main.glade", NULL);
- 
+
     window = GTK_WIDGET(gtk_builder_get_object(BUILDER, "window_main"));
     gtk_builder_connect_signals(BUILDER, NULL);
 
@@ -70,9 +81,11 @@ int main(int argc, char *argv[])
 
     //---------- FIN FONCTION SUR LES BOUTONS ----------//
     //g_object_unref(BUILDER);
- 
-    gtk_widget_show_all(window);                
+
+    gtk_widget_show_all(window);
     gtk_main();
- 
+
+		freeNeuralNet(ocrNet);
+
     return 0;
 }
