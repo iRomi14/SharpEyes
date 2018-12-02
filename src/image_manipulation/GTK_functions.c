@@ -80,13 +80,18 @@ void start_OCR()
 	{
 		binarize_button();
 		inverse(IMAGE);
-		//draw_lines_button();
 		SDL_Surface *img =draw_lines(IMAGE);
 		isolateLine(img);
-		for (size_t i = 0; i < 10000; i++)
+		GObject *label = gtk_builder_get_object(BUILDER, "frame_label");
+		GtkWidget *text = GTK_WIDGET(label);
+
+		/*for (size_t i = 0; i < 10000; i++)
+		{
 	        printf("%c",Final_Text[i]);
-		printf("\n");
-  	printf("OCR done\n");
+		}*/
+		//printf("\n");
+		gtk_label_set_text(GTK_LABEL(text), Final_Text);
+  		printf("OCR done\n");
 		SDL_FreeSurface(img);
 	}
 }

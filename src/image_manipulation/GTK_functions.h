@@ -22,6 +22,5 @@ void start_OCR();
 void select_file(GObject *bouton);
 void open_image_test();
 void reload_image(int assertion);
-//SDL_Surface* resize_image(SDL_Surface *img, int w, int h);
 
 #endif
