@@ -13,7 +13,8 @@
 #define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,_"
 #define saveFile "ocr_weights_2.se"
 
-#define HLAYER 64
+#define HLAYER1 128
+#define HLAYER2 64
 
 int main(int argc, char *argv[]){
 	srand (time(NULL));
@@ -30,13 +31,14 @@ int main(int argc, char *argv[]){
   printf("Loading %zu Characters\n", N*variants);
 
   NN ocrNet;
-  ocrNet.layers = 2;
+  ocrNet.layers = 3;
 
   ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
   ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
 
-  initMatrix(&ocrNet.weights[0], 784, HLAYER, true);
-  initMatrix(&ocrNet.weights[1], HLAYER, N, true);
+  initMatrix(&ocrNet.weights[0], 784, HLAYER1, true);
+  initMatrix(&ocrNet.weights[1], HLAYER1, HLAYER2, true);
+	initMatrix(&ocrNet.weights[2], HLAYER2, N, true);
   //initMatrix(&xorNet.weights[1], 64, , true);
 
   SDL_Surface *image, *processed;
