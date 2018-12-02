@@ -6,8 +6,6 @@
 # include "../pixel/pixel_operations.h"
 # include "../image_manipulation/SDL_functions.h"
 
-size_t idx = 0;
-
 /*
 **  SEGMENTATION
 **  file: segmentation.c

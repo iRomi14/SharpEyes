@@ -23,9 +23,9 @@ void binarize_button()
 	{
 		otsu(IMAGE);
 		SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
-    	if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
-    		return;
-    	reload_image(0);
+  	if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
+  		return;
+  	reload_image(0);
 	}
 }
 
@@ -75,24 +75,16 @@ void start_OCR()
 {
 	if (PRINT_IMAGE)
 	{
+
+		idx = 0;
 		binarize_button();
 		inverse(IMAGE);
 		SDL_Surface *img =draw_lines(IMAGE);
 		isolateLine(img);
+		printf("OCR %s\n", Final_Text);
 		GObject *label = gtk_builder_get_object(BUILDER, "frame_label");
 		GtkWidget *text = GTK_WIDGET(label);
-		if (strlen(gtk_label_get_text(GTK_LABEL(text))) > 1)
-		{
-			text = gtk_label_new(" ");
-			gtk_label_set_text(GTK_LABEL(text), "No text to display");
-			//reload_label(text);
-		}
 
-		/*for (size_t i = 0; i < strlen(Final_Text); i++)
-		{
-	        printf("%c",Final_Text[i]);
-		}*/
-		//printf("\n");
 		gtk_label_set_text(GTK_LABEL(text), Final_Text);
 		SDL_FreeSurface(img);
 	}
@@ -101,7 +93,7 @@ void start_OCR()
 void save_txt()
 {
 	printf("SAVE TXT\n");
-	char *s = "";
+	const char *s = "";
 	FILE* file = NULL;
 	file = fopen("OCR.txt", "w");
 	if (file != NULL)

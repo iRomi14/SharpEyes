@@ -5,6 +5,7 @@
 # include "../neural_net/nn.h"
 
 char Final_Text[10000];
+size_t idx;
 int nb_words;
 NN ocrNet;
 
