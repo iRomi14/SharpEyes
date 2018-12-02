@@ -1,13 +1,7 @@
 #ifndef DECOUPAGE_H
 #define DECOUPAGE_H
 
-# include <SDL.h>
-# include "../neural_net/nn.h"
-
-char Final_Text[10000];
-size_t idx;
-int nb_words;
-NN ocrNet;
+#include "reconstruct.h"
 
 char savePath[64];
 
@@ -15,7 +9,7 @@ char savePath[64];
 //*************************** TOOLS ***********************************//
 //*********************************************************************//
 
-void bmp_to_vector(Vector *dst, SDL_Surface *image_surface);
+
 
 double *create_matrix(SDL_Surface *image_surface);
 

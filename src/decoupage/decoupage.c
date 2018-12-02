@@ -3,8 +3,6 @@
 # include <SDL.h>
 
 # include "decoupage.h"
-# include "../pixel/pixel_operations.h"
-# include "../image_manipulation/SDL_functions.h"
 
 /*
 **  SEGMENTATION
@@ -72,31 +70,6 @@ int isSpace(SDL_Surface* img)
   return space;
 }
 
-void bmp_to_vector(Vector *dst, SDL_Surface *image_surface){
-
-  size_t width = (size_t)image_surface->w; //je recupère la largeur de l'image soit le nombre de pixel en largeur.
-
-  size_t height = (size_t)image_surface->h; //je recupère la hauteur de l'image soit le nombre de pixel en hauteur.
-
-  //Matrix final;
-  initVector(dst, height*width, false); // j'initialise une matrice de hauteur par largeur.
-
-  for (size_t x = 0 ; x < width; x++) {
-    for (size_t y = 0; y < height; y++) { //je parcour mes pixels un par un.
-
-      Uint32 pixel = get_pixel(image_surface,x,y); // je recupère un pixel.
-      Uint8 r, g, b;
-      SDL_GetRGB(pixel, image_surface->format, &r, &g, &b); // je recupère ces valeur R G B.
-
-      if (r == 255) //blanc
-        dst->data[x*height+y]/*.data[x]*/ = -1.0; //si c'est un pixel blanc je met ca valeur à 1.
-
-      if (r == 0) //noir
-        dst->data[x*height+y]/*.data[x]*/  = 1.0;//si c'est un pixel noir je met ca valeur à 0.
-
-    }
-  }
-}
 
 //******************************************************************************//
 //********************** DETECTION OF WHITE LINES ******************************//
@@ -157,6 +130,8 @@ void isolateLine(SDL_Surface *img)
   int lastCut = 0;
   int height = img -> h;
 
+  initText();
+
   for(int i = 0; i < height; i++)
   {
     if(i != 0 && i <= lastCut)
@@ -178,8 +153,7 @@ void isolateLine(SDL_Surface *img)
           lastCut = j;
           // One isole la ligne découpé avec les lettres (dedans) dans une surface.
           cutSurface(img, firstCut, lastCut);
-          Final_Text[idx] = ' ';
-          idx++;
+          addChar('\n');
           break;
         }
       }
@@ -260,8 +234,6 @@ void isolateChar(SDL_Surface *img)
   int firstCut;
   int lastCut = -1;
   int lastRead = -1;
-  Vector v;
-  Matrix x, y_pred;
 
   for(int i = 0; i < img -> w; i++){
     if(i < lastRead)
@@ -302,28 +274,24 @@ void isolateChar(SDL_Surface *img)
           if(isSpace(copy) == 0)
           {
             SDL_Surface *resize = Resize(copy, 28, 28);
+
+            OCR_recon(resize);
             //Détecter la lettre.
             //sprintf(savePath, "src/temp/%c.bmp", ALPHABET[idx]);
             //SDL_SaveBMP(resize, savePath);
 
-            bmp_to_vector(&v, resize);
-            initMatrix(&x, 1, v.size, false);
-            x.data[0] = v;
+
             //printVector(v);
             /*double *letter = create_matrix(resize);
             print_matrix(letter, 28, 28);*/
-            y_pred = forward(ocrNet, x);
 
-            Final_Text[idx] = ALPHABET[argmax(y_pred.data[0])];
 
-            freeMatrix(x);
-            idx++;
+            SDL_FreeSurface(resize);
           }
 
           if(copy -> w > 5 && isSpace(copy) == 1)
           {
-            Final_Text[idx] = ' ';
-            idx++;
+            addChar(' ');
           }
           break;
         }

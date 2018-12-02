@@ -18,8 +18,6 @@ void loadMatrix(Matrix *dst, char *in){
   size_t l = (size_t)strtoul(in, &token, 10);
   size_t m = (size_t)strtoul(token+1, &token, 10);
 
-  printf("%zu x %zu\n", l, m);
-
   initMatrix(dst, l, m, false);
 
   token = strtok_r(in, "\n", &in);

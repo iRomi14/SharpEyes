@@ -11,7 +11,7 @@
 #include "neural_net/nn.h"
 
 //#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-#define saveFile "ocr_weights_arial.se"
+#define saveFile "res/ocr_weights_2.se"
 
 #define HLAYER 64
 

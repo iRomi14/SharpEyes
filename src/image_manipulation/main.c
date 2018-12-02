@@ -9,7 +9,7 @@
 #include "to_binarize.h"
 #include "SDL_functions.h"
 
-#define saveFile "ocr_weights_arial.se"
+#define saveFile "res/ocr_weights_arial.se"
 
 /*
     Compiler GTK + SDL:
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     //builder = gtk_builder_new();
     BUILDER = gtk_builder_new();
-    gtk_builder_add_from_file (BUILDER, "window_main.glade", NULL);
+    gtk_builder_add_from_file (BUILDER, "res/window_main.glade", NULL);
 
     window = GTK_WIDGET(gtk_builder_get_object(BUILDER, "window_main"));
     gtk_builder_connect_signals(BUILDER, NULL);

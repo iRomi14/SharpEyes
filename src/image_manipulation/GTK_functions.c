@@ -23,8 +23,8 @@ void binarize_button()
 	if (PRINT_IMAGE)
 	{
 		otsu(IMAGE);
-		SDL_SaveBMP(IMAGE, "src/temp/binarized.bmp");
-  	if(realpath("src/temp/binarized.bmp", FILE_NAME) == NULL)
+		SDL_SaveBMP(IMAGE, "res/temp/binarized.bmp");
+  	if(realpath("res/temp/binarized.bmp", FILE_NAME) == NULL)
   		return;
   	reload_image(0);
 	}
@@ -35,8 +35,8 @@ void draw_lines_button()
 	if (PRINT_IMAGE)
 	{
 		SDL_Surface *img = draw_lines(IMAGE);
-		SDL_SaveBMP(img, "src/temp/rlsa.bmp");
-		if(realpath("src/temp/rlsa.bmp", FILE_NAME) == NULL)
+		SDL_SaveBMP(img, "res/temp/rlsa.bmp");
+		if(realpath("res/temp/rlsa.bmp", FILE_NAME) == NULL)
 			return;
 		reload_image(0);
 		SDL_FreeSurface(img);
@@ -48,8 +48,8 @@ void grayscale_button()
 	if (PRINT_IMAGE)
 	{
 		greyscale(IMAGE);
-		SDL_SaveBMP(IMAGE, "src/temp/grayscaled.bmp");
-		if(realpath("src/temp/grayscaled.bmp", FILE_NAME) == NULL)
+		SDL_SaveBMP(IMAGE, "res/temp/grayscaled.bmp");
+		if(realpath("res/temp/grayscaled.bmp", FILE_NAME) == NULL)
 			return;
 		reload_image(0);
 	}
@@ -60,8 +60,8 @@ void rotate_button()
     if(PRINT_IMAGE)
 	{
 		IMAGE = SDL_RotationCentralN(IMAGE, 5.0);
-		SDL_SaveBMP(IMAGE, "src/temp/rotated.bmp");
-		if(realpath("src/temp/rotated.bmp", FILE_NAME) == NULL)
+		SDL_SaveBMP(IMAGE, "res/temp/rotated.bmp");
+		if(realpath("res/temp/rotated.bmp", FILE_NAME) == NULL)
 			return;
 		reload_image(0);
 		//SDL_FreeSurface(img);
@@ -73,8 +73,8 @@ void smoothy_button()
 	if (PRINT_IMAGE)
 	{
 		remove_dots(IMAGE);
-    	SDL_SaveBMP(IMAGE, "src/temp/smoothed.bmp");
-    	if(realpath("src/temp/smoothed.bmp", FILE_NAME) == NULL)
+    	SDL_SaveBMP(IMAGE, "res/temp/smoothed.bmp");
+    	if(realpath("res/temp/smoothed.bmp", FILE_NAME) == NULL)
     		return;
     	reload_image(0);
 	}
@@ -84,17 +84,16 @@ void start_OCR()
 {
 	if (PRINT_IMAGE)
 	{
-
-		idx = 0;
 		binarize_button();
 		inverse(IMAGE);
 		SDL_Surface *img =draw_lines(IMAGE);
 		isolateLine(img);
-		printf("OCR %s\n", Final_Text);
 		GObject *label = gtk_builder_get_object(BUILDER, "frame_label");
 		GtkWidget *text = GTK_WIDGET(label);
 
-		gtk_label_set_text(GTK_LABEL(text), Final_Text);
+		gtk_label_set_text(GTK_LABEL(text), Final_Text.data);
+
+		free(Final_Text.data);
 		SDL_FreeSurface(img);
 	}
 }
@@ -147,8 +146,8 @@ void open_image_test()
 	if(image->w > 1230 && image->h > 890)
 	{
 		SDL_Surface *new_image = Resize(image, 1230, 890);
-		SDL_SaveBMP(new_image,"src/temp/new_image_resized.bmp");
-		if(realpath("src/temp/new_image_resized.bmp", FILE_NAME) == NULL)
+		SDL_SaveBMP(new_image,"res/temp/new_image_resized.bmp");
+		if(realpath("res/temp/new_image_resized.bmp", FILE_NAME) == NULL)
 			return;
 		SDL_FreeSurface(new_image);
 	}
