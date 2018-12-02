@@ -12,12 +12,9 @@
 
 void on_window_main_destroy()
 {
-	if (PRINT_IMAGE)
-	{
-		g_object_unref(BUILDER);
-		SDL_FreeSurface(IMAGE);
-    	gtk_main_quit();
-	}
+	g_object_unref(BUILDER);
+	SDL_FreeSurface(IMAGE);
+    gtk_main_quit();
 }
 
 void binarize_button()
