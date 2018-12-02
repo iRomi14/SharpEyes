@@ -98,6 +98,23 @@ void start_OCR()
 	}
 }
 
+void save_txt()
+{
+	printf("SAVE TXT\n");
+	char *s = "";
+	FILE* file = NULL;
+	file = fopen("OCR.txt", "w");
+	if (file != NULL)
+	{
+		printf("FILE OK\n");
+		GObject *label = gtk_builder_get_object(BUILDER, "frame_label");
+		GtkWidget *text = GTK_WIDGET(label);
+		s = gtk_label_get_text(GTK_LABEL(text));
+		fputs(s, file);
+		fclose(file);
+	}
+}
+
 void select_file(GObject *bouton)
 {
 	gint res;

@@ -10,7 +10,7 @@ GtkBuilder *BUILDER;
 GtkWidget *PRINT_IMAGE;
 GObject *FRAME;
 SDL_Surface *IMAGE;
-//GObject *object, gpointer user_data
+
 void on_window_main_destroy();
 void binarize_button();
 void draw_lines_button();
@@ -18,10 +18,10 @@ void grayscale_button();
 void rotate_button();
 void smoothy_button();
 void start_OCR();
+void save_txt();
 
 void select_file(GObject *bouton);
 void open_image_test();
 void reload_image(int assertion);
-//void reload_label(GtkWidget *text);
 
 #endif
