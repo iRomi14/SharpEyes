@@ -15,42 +15,6 @@
 //******************************* TOOLS ****************************************//
 //******************************************************************************//
 
-double *create_matrix(SDL_Surface *img)
-{
-  //Variables
-  double *letterMatrix = malloc(sizeof(double) * 28 * 28);
-  Uint8 r;
-  Uint8 g;
-  Uint8 b;
-
-  for(int i = 0; i < img -> h; i++)
-  {
-      for(int j = 0; j < img -> w; j++)
-      {
-          Uint32 pixel = get_pixel(img, j, i);
-          SDL_GetRGB(pixel, img -> format, &r, &g, &b);
-          if(r == 0 && g == 0 && b == 0)
-              letterMatrix[j + i * img -> w] = 1;
-          else
-              letterMatrix[j + i * img -> w] = 0;
-      }
-  }
-  return letterMatrix;
-}
-
-void print_matrix(double mat[], size_t lines, size_t cols)
-{
-    for(size_t i = 0; i < lines; i++)
-    {
-				printf("[");
-        for(size_t j = 0; j < cols; j++)
-            printf("%d", (int)mat[j + i * cols]);
-
-	      printf("]\n");
-    }
-    printf("\n");
-}
-
 int isSpace(SDL_Surface* img)
 {
   Uint32 pixel;
@@ -75,7 +39,7 @@ int isSpace(SDL_Surface* img)
 //********************** DETECTION OF WHITE LINES ******************************//
 //******************************************************************************//
 
-/* Cut the lines of the image */
+/* Draw red line and cut the lines of the image */
 SDL_Surface* draw_lines(SDL_Surface *img)
 {
     /* Variables */
@@ -120,7 +84,7 @@ SDL_Surface* draw_lines(SDL_Surface *img)
     return(img_copy);
 }
 
-/* Isolate the lines */
+/* Isolate the lines with the characters in */
 void isolateLine(SDL_Surface *img)
 {
   /* Variables */
@@ -161,13 +125,14 @@ void isolateLine(SDL_Surface *img)
   }
 }
 
-/* Display the isolated cuts */
+/* Isolate in a new surface the line with characters in and start 
+the segementation of characters on it */
 void cutSurface(SDL_Surface *img, int firstCut,int lastCut)
 {
   //Créer une surface qui contient la zone a découpé;
   SDL_Surface* copy = SDL_CreateRGBSurface(0,img -> w,lastCut - firstCut,
                               img -> format -> BitsPerPixel, 0, 0, 0, 0);
-  //COpié la zoné découpé dans une nouvelle surface.
+  //Copié la zoné découpé dans une nouvelle surface.
   for(int i = 0; i < copy -> w; i++){
     for(int j = 0; j < copy -> h; j++){
       Uint32 pixel = get_pixel(img, i, firstCut + j);
@@ -183,7 +148,7 @@ void cutSurface(SDL_Surface *img, int firstCut,int lastCut)
 //******************** ADJUSTEMENT OF CHARACTERS *******************************//
 //******************************************************************************//
 
-/* Cut the characters into the isolated cuts */
+/* Draw, on a new surface, the line to cut the characters to isolate characters */
 void draw_sperate_char(SDL_Surface *img)
 {
   /*Variables*/
@@ -226,6 +191,8 @@ void draw_sperate_char(SDL_Surface *img)
   }
 }
 
+/* Isolate the characters one by one into a new surface and send it to
+the neural_net */
 void isolateChar(SDL_Surface *img)
 {
   /*Variables*/
@@ -274,18 +241,7 @@ void isolateChar(SDL_Surface *img)
           if(isSpace(copy) == 0)
           {
             SDL_Surface *resize = Resize(copy, 28, 28);
-
             OCR_recon(resize);
-            //Détecter la lettre.
-            //sprintf(savePath, "src/temp/%c.bmp", ALPHABET[idx]);
-            //SDL_SaveBMP(resize, savePath);
-
-
-            //printVector(v);
-            /*double *letter = create_matrix(resize);
-            print_matrix(letter, 28, 28);*/
-
-
             SDL_FreeSurface(resize);
           }
 

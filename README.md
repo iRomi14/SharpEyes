@@ -1,6 +1,6 @@
 # SharpEyes
 ```
-A brand new optical character recognizer in C99
+A brand new optical character recognizer in C99 made by SharpEyes's team.
 ```
 
 ## Information
