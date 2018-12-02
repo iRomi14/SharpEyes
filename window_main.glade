@@ -7,7 +7,7 @@
     <property name="title" translatable="yes">Pixloader</property>
     <property name="default_width">1230</property>
     <property name="default_height">890</property>
-    <property name="icon">../../iconlogo.png</property>
+    <property name="icon">iconlogo.png</property>
     <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child type="titlebar">
       <object class="GtkMenuBar" id="toolbar">
