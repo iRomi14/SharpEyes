@@ -10,8 +10,8 @@
 
 #include "neural_net/nn.h"
 
-#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-,_"
-#define saveFile "ocr_weights_2.se"
+#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,_"
+#define saveFile "ocr_weights.se"
 
 int main(int argc, char *argv[]){
   srand (time(NULL));
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
 
   NN ocrNet;
-  ocrNet.layers = 3;
+  ocrNet.layers = 2;
 
   ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
   ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));

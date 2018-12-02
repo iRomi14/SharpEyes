@@ -10,8 +10,8 @@
 
 #include "neural_net/nn.h"
 
-#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-,_"
-#define saveFile "ocr_weights_2.se"
+#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,_"
+#define saveFile "ocr_weights.se"
 
 #define HLAYER1 128
 #define HLAYER2 64
@@ -31,14 +31,14 @@ int main(int argc, char *argv[]){
   printf("Loading %zu Characters\n", N*variants);
 
   NN ocrNet;
-  ocrNet.layers = 3;
+  ocrNet.layers = 2;
 
   ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
   ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
 
   initMatrix(&ocrNet.weights[0], 784, HLAYER1, true);
-  initMatrix(&ocrNet.weights[1], HLAYER1, HLAYER2, true);
-	initMatrix(&ocrNet.weights[2], HLAYER2, N, true);
+  //initMatrix(&ocrNet.weights[1], HLAYER1, HLAYER2, true);
+	initMatrix(&ocrNet.weights[1], HLAYER1, N, true);
   //initMatrix(&xorNet.weights[1], 64, , true);
 
   SDL_Surface *image, *processed;
@@ -74,7 +74,9 @@ int main(int argc, char *argv[]){
       to_binarize(image);
 			processed = draw_lines(image);
 			processed = isolateLine(processed);
-			//SDL_SaveBMP(image, "./draw_lines.bmp");
+
+			//sprintf(buffer, "src/temp/%c.bmp", ALPHABET[i]);
+			//SDL_SaveBMP(processed, buffer);
 			//double *letter = create_matrix(processed);
 			//print_matrix(letter, 28, 28);
       bmp_to_vector(&v, processed);
