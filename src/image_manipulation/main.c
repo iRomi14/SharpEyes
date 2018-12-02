@@ -45,17 +45,17 @@ int main(int argc, char *argv[])
 
     gtk_window_set_title(GTK_WINDOW(window), "Sharp Eyes");
 
-    //---------- FONCTION SUR LES BOUTONS ----------//
+    //---------- GUI FUNC ----------//
 
     //Association fonction quitter a la fenetre
     GObject *quit_button = gtk_builder_get_object(BUILDER, "quit");
     g_signal_connect (quit_button, "select", G_CALLBACK (on_window_main_destroy), NULL);
 
-    //Choix fichier et affichage image
+    //Select and display image
     GObject *select_image = gtk_builder_get_object(BUILDER, "open");
     g_signal_connect (select_image, "activate", G_CALLBACK (select_file), NULL);
 
-    //binarisation
+    //binarize
     GObject *bin_button = gtk_builder_get_object(BUILDER, "binariser");
     g_signal_connect (bin_button, "activate", G_CALLBACK (binarize_button), NULL);
 
@@ -67,11 +67,11 @@ int main(int argc, char *argv[])
     GObject *gray_button = gtk_builder_get_object(BUILDER, "gris");
     g_signal_connect (gray_button, "activate", G_CALLBACK (grayscale_button), NULL);
 
-    //Rotation
+    //Rotate
     GObject *rotat_button = gtk_builder_get_object(BUILDER, "rotation");
     g_signal_connect (rotat_button, "activate", G_CALLBACK (rotate_button), NULL);
 
-    //Lissage
+    //Smooth
     GObject *smooth_button = gtk_builder_get_object(BUILDER, "lissage");
     g_signal_connect (smooth_button, "activate", G_CALLBACK (smoothy_button), NULL);
 
@@ -79,8 +79,11 @@ int main(int argc, char *argv[])
     GObject *start = gtk_builder_get_object(BUILDER, "Start");
     g_signal_connect (start, "activate", G_CALLBACK (start_OCR), NULL);
 
-    //---------- FIN FONCTION SUR LES BOUTONS ----------//
-    //g_object_unref(BUILDER);
+    //save txt
+    GObject *save = gtk_builder_get_object(BUILDER, "save");
+    g_signal_connect (save, "activate", G_CALLBACK (save_txt), NULL);
+
+    //---------- END FUNC----------//
 
     gtk_widget_show_all(window);
     gtk_main();
