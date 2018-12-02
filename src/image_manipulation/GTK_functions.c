@@ -56,7 +56,15 @@ void grayscale_button()
 
 void rotate_button()
 {
-    printf("Rotation en loosdé\n");
+    if(PRINT_IMAGE)
+	{
+		SDL_Surface *img = SDL_RotationCentralN(IMAGE, 5.0);
+		SDL_SaveBMP(img, "src/temp/rotated.bmp");
+		if(realpath("src/temp/rotated.bmp", FILE_NAME) == NULL)
+			return;
+		reload_image(0);
+		SDL_FreeSurface(img);
+	}
 }
 
 void smoothy_button()
