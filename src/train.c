@@ -11,7 +11,7 @@
 #include "neural_net/nn.h"
 
 //#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-#define saveFile "ocr_weights_2.se"
+#define saveFile "ocr_weights_arial.se"
 
 #define HLAYER 64
 
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
   char buffer[64];
 
   char train_dir[] = "Banque Image/training/";
-  char image_name[] = "x/xx.bmp";
+  char image_name[] = "x.bmp";
 
   Matrix train_x;
   Matrix train_y;
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
     //printf("%s\n", strncat(buffer, image_name, 64));
     for(size_t j = 0; j < variants; j++){
 
-      sprintf(image_name, "%c/%02zu.bmp", ALPHABET[i] != '.' ? ALPHABET[i] : '_', j);
+      sprintf(image_name, "%c.bmp", ALPHABET[i]);
       strcpy(buffer, train_dir);
 
       //printf("%s\n", strncat(buffer, image_name, 64));

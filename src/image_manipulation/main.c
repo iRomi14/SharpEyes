@@ -9,7 +9,7 @@
 #include "to_binarize.h"
 #include "SDL_functions.h"
 
-#define saveFile "ocr_weights.se"
+#define saveFile "ocr_weights_arial.se"
 
 /*
     Compiler GTK + SDL:

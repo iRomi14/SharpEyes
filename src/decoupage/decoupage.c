@@ -305,9 +305,8 @@ void isolateChar(SDL_Surface *img)
           {
             SDL_Surface *resize = Resize(copy, 28, 28);
             //Détecter la lettre.
-
-            //sprintf(savePath, "src/temp/%03zu.bmp", idx);
-            //SDL_SaveBMP(Resize(copy, 28, 28), savePath);
+            //sprintf(savePath, "src/temp/%c.bmp", ALPHABET[idx]);
+            //SDL_SaveBMP(resize, savePath);
 
             bmp_to_vector(&v, resize);
             initMatrix(&x, 1, v.size, false);
