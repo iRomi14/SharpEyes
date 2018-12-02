@@ -84,14 +84,19 @@ void start_OCR()
 		isolateLine(img);
 		GObject *label = gtk_builder_get_object(BUILDER, "frame_label");
 		GtkWidget *text = GTK_WIDGET(label);
+		if (strlen(gtk_label_get_text(GTK_LABEL(text))) > 1)
+		{
+			text = gtk_label_new(" ");
+			gtk_label_set_text(GTK_LABEL(text), "No text to display");
+			//reload_label(text);
+		}
 
-		/*for (size_t i = 0; i < 10000; i++)
+		/*for (size_t i = 0; i < strlen(Final_Text); i++)
 		{
 	        printf("%c",Final_Text[i]);
 		}*/
 		//printf("\n");
 		gtk_label_set_text(GTK_LABEL(text), Final_Text);
-  		printf("OCR done\n");
 		SDL_FreeSurface(img);
 	}
 }
@@ -124,9 +129,9 @@ void open_image_test()
 	//Partie SDL
     SDL_Surface *image = SDL_LoadBMP(FILE_NAME);
 
-	if(image->w > 1080 && image->h > 720)
+	if(image->w > 1230 && image->h > 890)
 	{
-		SDL_Surface *new_image = Resize(image, 1080, 720);
+		SDL_Surface *new_image = Resize(image, 1230, 890);
 		SDL_SaveBMP(new_image,"src/temp/new_image_resized.bmp");
 		if(realpath("src/temp/new_image_resized.bmp", FILE_NAME) == NULL)
 			return;
@@ -161,3 +166,10 @@ void reload_image(int assertion)
 		PRINT_IMAGE = print_img_temp;
 	}
 }
+
+/*void reload_label(GtkWidget *text)
+{
+	printf("reload_label\n");
+	text = gtk_label_new(" ");
+	gtk_label_set_text(GTK_LABEL(text), "No text to display");
+}*/

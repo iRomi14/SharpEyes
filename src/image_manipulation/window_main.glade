@@ -5,8 +5,9 @@
   <object class="GtkWindow" id="window_main">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Pixloader</property>
-    <property name="default_width">1080</property>
-    <property name="default_height">720</property>
+    <property name="default_width">1230</property>
+    <property name="default_height">890</property>
+    <property name="icon">../../iconlogo.png</property>
     <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child type="titlebar">
       <object class="GtkMenuBar" id="toolbar">
@@ -121,7 +122,7 @@
           <object class="GtkMenuItem" id="Start">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="tooltip_text" translatable="yes">Lunch the OCR on the image displayed</property>
+            <property name="tooltip_text" translatable="yes">Lunch the OCR on the image displayed. Double clik it to start</property>
             <property name="label" translatable="yes">Start OCR</property>
             <property name="use_underline">True</property>
           </object>

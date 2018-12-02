@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
     //Start OCR
     GObject *start = gtk_builder_get_object(BUILDER, "Start");
-    g_signal_connect (start, "select", G_CALLBACK (start_OCR), NULL);
+    g_signal_connect (start, "activate", G_CALLBACK (start_OCR), NULL);
 
     //---------- FIN FONCTION SUR LES BOUTONS ----------//
     //g_object_unref(BUILDER);

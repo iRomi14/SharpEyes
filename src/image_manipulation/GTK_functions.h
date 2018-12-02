@@ -22,5 +22,6 @@ void start_OCR();
 void select_file(GObject *bouton);
 void open_image_test();
 void reload_image(int assertion);
+//void reload_label(GtkWidget *text);
 
 #endif
