@@ -3,7 +3,7 @@
 
 #include "../matrix/matrix.h"
 
-#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,_"
+#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,."
 
 typedef struct NeuralNet {
   Matrix *weights;

@@ -24,7 +24,7 @@ for font in os.listdir(fonts_dir):
             save_dir = os.path.join(train_dir, c)
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
-            img.save(os.path.join(save_dir, '{:02}.bmp'.format(i)))
+                img.save(os.path.join(save_dir, '{:02}.bmp'.format(i)))
         i+=1
 
 

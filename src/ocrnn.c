@@ -10,7 +10,7 @@
 
 #include "neural_net/nn.h"
 
-#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+//#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 #define saveFile "ocr_weights_2.se"
 
 int main(int argc, char *argv[]){
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
   for (size_t i = 0; i < N; i++){
     for(size_t j = 0; j < variants; j++){
 
-      sprintf(image_name, "%c/%02zu.bmp", ALPHABET[i], j);
+      sprintf(image_name, "%c/%02zu.bmp", ALPHABET[i] != '.' ? ALPHABET[i] : '_', j);
       strcpy(buffer, train_dir);
 
       //printf("%s\n", strncat(buffer, image_name, 64));
