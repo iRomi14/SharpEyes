@@ -32,13 +32,11 @@ void initText(){
   Final_Text.size = MIN_SZ;
   Final_Text.idx = 0;
   Final_Text.data = (char *)calloc(MIN_SZ, sizeof(char));
-  printf("%s\n", Final_Text.data);
 }
 
 void addChar(char c){
   if(Final_Text.idx+1 >= Final_Text.size){
     Final_Text.size += MIN_SZ;
-    //printf("%zu\n", Final_Text.size);
     Final_Text.data = realloc(Final_Text.data, Final_Text.size);
     if(Final_Text.data == NULL)
       exit(-1);

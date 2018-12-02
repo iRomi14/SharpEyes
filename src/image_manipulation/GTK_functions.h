@@ -10,6 +10,7 @@ GtkBuilder *BUILDER;
 GtkWidget *PRINT_IMAGE;
 GObject *FRAME;
 SDL_Surface *IMAGE;
+float rotate_angle;
 
 void on_window_main_destroy();
 void binarize_button();

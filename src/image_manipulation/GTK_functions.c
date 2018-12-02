@@ -59,7 +59,10 @@ void rotate_button()
 {
     if(PRINT_IMAGE)
 	{
-		IMAGE = SDL_RotationCentralN(IMAGE, 5.0);
+		rotate_angle += 10.0;
+		if(realpath("res/temp/orig.bmp", FILE_NAME) == NULL)
+			return;
+		IMAGE = SDL_RotationCentralN(SDL_LoadBMP(FILE_NAME), rotate_angle);
 		SDL_SaveBMP(IMAGE, "res/temp/rotated.bmp");
 		if(realpath("res/temp/rotated.bmp", FILE_NAME) == NULL)
 			return;
@@ -100,13 +103,13 @@ void start_OCR()
 
 void save_txt()
 {
-	printf("SAVE TXT\n");
+	//printf("SAVE TXT\n");
 	const char *s = "";
 	FILE* file = NULL;
 	file = fopen("OCR.txt", "w");
 	if (file != NULL)
 	{
-		printf("FILE OK\n");
+		printf("Text saved in OCR.txt\n");
 		GObject *label = gtk_builder_get_object(BUILDER, "frame_label");
 		GtkWidget *text = GTK_WIDGET(label);
 		s = gtk_label_get_text(GTK_LABEL(text));
@@ -141,7 +144,8 @@ void select_file(GObject *bouton)
 void open_image_test()
 {
 	//Partie SDL
-    SDL_Surface *image = SDL_LoadBMP(FILE_NAME);
+  SDL_Surface *image = SDL_LoadBMP(FILE_NAME);
+	rotate_angle = 0;
 
 	if(image->w > 1230 && image->h > 890)
 	{
@@ -153,6 +157,9 @@ void open_image_test()
 	}
 
 	IMAGE = SDL_LoadBMP(FILE_NAME);
+
+	SDL_SaveBMP(IMAGE, "res/temp/orig.bmp");
+
 	SDL_FreeSurface(image);
 	//Affichage fenentre dans GTK
 	if (PRINT_IMAGE)
@@ -172,7 +179,7 @@ void reload_image(int assertion)
 	}
 	if (assertion == 0)
 	{
-		printf("affichage : %s\n", FILE_NAME);
+		//printf("affichage : %s\n", FILE_NAME);
 		GtkWidget *print_img_temp = gtk_image_new_from_file(FILE_NAME);
 		gtk_container_remove(GTK_CONTAINER(FRAME), PRINT_IMAGE);
 		gtk_container_add(GTK_CONTAINER(FRAME), print_img_temp);
