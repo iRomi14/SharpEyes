@@ -4,7 +4,7 @@ import os
 train_dir = "Banque Image/training"
 fonts_dir = "Banque Image/fonts"
 
-alphabet= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,."
+alphabet= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-,."
 #fonts = ["PlayfairDisplay-Regular", "Roboto-Regular", "Slabo27px-Regular"]
 
 #for i in range(len(fonts)):
