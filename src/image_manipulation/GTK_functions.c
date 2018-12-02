@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "smooth.h"
+#include "rotate.h"
 #include "to_binarize.h"
 #include "GTK_functions.h"
 #include "SDL_functions.h"
