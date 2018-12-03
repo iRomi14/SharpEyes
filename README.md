@@ -19,9 +19,8 @@ $ ./main
 * Train the OCR Neural Netword
 
 ```
-$ python3 gen_trainset.py
 $ make train
-$ ./train {epochs} {number fonts}
+$ ./train {epochs}
 ```
 
 * Xor Neural Network PoC
@@ -33,6 +32,7 @@ $ ./xornn {epochs}
 
 ## Dependencies
 
-* SDL2.0
+* GTK 3+
+* SDL 2.0
 * make
 * gcc
