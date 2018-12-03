@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
 
   NN ocrNet;
-  ocrNet.layers = 3;
+  ocrNet.layers = 2;
 
   ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
   ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
       strcpy(buffer, train_dir);
 
       //printf("%s\n", strncat(buffer, image_name, 64));
-      image = SDL_LoadBMP(strncat(buffer, image_name, 64));
+      image = SDL_LoadBMP(strncat(buffer, image_name, 63));
       if (image == NULL)
         exit(-1);
 

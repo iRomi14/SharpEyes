@@ -21,7 +21,7 @@
 #define HEIGHT 1080
 #define XTIME 500
 
-#define saveFile "ocr_weights.se"
+#define saveFile "ocr_weights_2.se"
 
 int main(){
 

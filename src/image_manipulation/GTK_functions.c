@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <gtk/gtk.h>
 #include <SDL.h>
 #include <stdio.h>
