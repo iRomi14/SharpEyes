@@ -35,6 +35,8 @@ void initText(){
 }
 
 void addChar(char c){
+  if(ocrNet.train)
+    return;
   if(Final_Text.idx+1 >= Final_Text.size){
     Final_Text.size += MIN_SZ;
     Final_Text.data = realloc(Final_Text.data, Final_Text.size);
@@ -47,17 +49,27 @@ void addChar(char c){
 }
 
 void OCR_recon(SDL_Surface *image_surface){
-
   Matrix x, y_pred;
   Vector v;
 
   bmp_to_vector(&v, image_surface);
   initMatrix(&x, 1, v.size, false);
   x.data[0] = v;
+  if(ocrNet.train){
+    char buffer[64];
+    char image_name[] = "x.bmp";
 
-  y_pred = forward(ocrNet, x);
+    sprintf(image_name, "%c.bmp", ALPHABET[Final_Text.idx] != '.' ? ALPHABET[Final_Text.idx] : '_');
+    strcpy(buffer, train_dir);
 
-  addChar(ALPHABET[argmax(y_pred.data[0])]);
+    SDL_SaveBMP(image_surface, strncat(buffer, image_name, 63));
+    Final_Text.idx++;
+  }else{
+    y_pred = forward(ocrNet, x);
+
+    addChar(ALPHABET[argmax(y_pred.data[0])]);
+  }
+
 
   freeMatrix(x);
 }

@@ -1,0 +1,1 @@
+temporary directory used to store processed images before showing them in the GUI

@@ -1,36 +1,30 @@
-# include <stdio.h>
-# include <stdlib.h>
-# include <SDL.h>
+#include <gtk/gtk.h>
+#include <stdio.h>
+#include <SDL.h>
 
-# include "pixel/pixel_operations.h"
-# include "image_manipulation/to_binarize.h"
-# include "image_manipulation/SDL_functions.h"
-# include "decoupage/decoupage.h"
-# include "neural_net/nn.h"
+/*#include "src/image_manipulation/GTK_functions.h"
+#include "src/image_manipulation/to_binarize.h"
+#include "src/image_manipulation/SDL_functions.h"*/
+#include "image_manipulation/GTK_functions.h"
+#include "image_manipulation/to_binarize.h"
+#include "image_manipulation/SDL_functions.h"
 
+#define saveFile "res/ocr_weights.se"
 
 /*
-	Installation : sudo apt-get install libsdl2-dev
-	Compilation : Ubuntu 18.XX.XX
-	gcc test.c -o exec $(sdl2-config --cflags --libs)
-				  Windows
-	gcc test.c -o exec -I SDL/include -L SDL/lib64 -lmingw64 -lSDL2main -lSDL2
+    Compiler GTK + SDL:
+        gcc -o gladewin main.c open_image.c GTK_functions.c SDL_functions.c to_binarize.c ../pixel/pixel_operations.c ../decoupage/decoupage.c ../matrix/vector.c ../matrix/matrix.c
+        -Wall $(sdl2-config --cflags --libs) `pkg-config --cflags --libs gtk+-3.0` -export-dynamic -lm
+    Compiler SDL :
+        gcc test.c -o exec $(sdl2-config --cflags --libs)
 */
-
-#define WIDTH 1920
-#define HEIGHT 1080
-#define XTIME 500
-
-#define saveFile "ocr_weights_2.se"
-
-int main(){
-
-	SDL_version nb;
-	SDL_VERSION(&nb);
-	SDL_Window *fenetre;
-	SDL_Renderer *renderer;
+int main(int argc, char *argv[])
+{
+	//GtkBuilder  *builder;
+	GtkWidget   *window;
 
 	ocrNet.layers = 2;
+	ocrNet.train = false;
 
 	ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
 	ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
@@ -39,89 +33,61 @@ int main(){
 
   loadWeights(&ocrNet, saveFile);
 
-	printf ("Hello, you're on SDL %d.%d\n", nb.major, nb.minor);
+	gtk_init(&argc, &argv);
 
-	//Lancement de SDL
-	if(SDL_Init(SDL_INIT_VIDEO) != 0)
-		SDL_ExitError("Initialisation SDL");
+    //builder = gtk_builder_new();
+    BUILDER = gtk_builder_new();
+    gtk_builder_add_from_file (BUILDER, "res/window_main.glade", NULL);
 
-	//Creation de la fenetre
-	fenetre = SDL_CreateWindow("image", //name of the window
-								SDL_WINDOWPOS_CENTERED, //pos x
-								SDL_WINDOWPOS_CENTERED, //pos y
-								WIDTH, HEIGHT, //width & lenth
-								0); //flag = window type
+    window = GTK_WIDGET(gtk_builder_get_object(BUILDER, "window_main"));
+    gtk_builder_connect_signals(BUILDER, NULL);
 
-	if(fenetre == NULL) //verification en cas d'erreur
-		SDL_ExitError("Creation de fenetre non abouti");
+    gtk_window_set_title(GTK_WINDOW(window), "Sharp Eyes");
 
-	//------ Creation Rendu ------//
+    //---------- GUI FUNC ----------//
 
-	renderer = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_SOFTWARE/*flag*/);
+    //Association fonction quitter a la fenetre
+    GObject *quit_button = gtk_builder_get_object(BUILDER, "quit");
+    g_signal_connect (quit_button, "select", G_CALLBACK (on_window_main_destroy), NULL);
 
-	if(renderer == NULL)
-		SDL_ExitError("Rendu non fait");
+    //Select and display image
+    GObject *select_image = gtk_builder_get_object(BUILDER, "open");
+    g_signal_connect (select_image, "activate", G_CALLBACK (select_file), NULL);
 
-	//------ Importer l'image ------//
+    //binarize
+    GObject *bin_button = gtk_builder_get_object(BUILDER, "binariser");
+    g_signal_connect (bin_button, "activate", G_CALLBACK (binarize_button), NULL);
 
-	SDL_Surface *image;
-	SDL_Texture *texture;
+    //drawline RLSA
+    GObject *rocognize_button = gtk_builder_get_object(BUILDER, "Reconnaissance");
+    g_signal_connect(rocognize_button, "activate", G_CALLBACK(draw_lines_button), NULL);
 
-	image = SDL_LoadBMP("Banque Image/words/Lorem_2.bmp");
+    //Grayscale
+    GObject *gray_button = gtk_builder_get_object(BUILDER, "gris");
+    g_signal_connect (gray_button, "activate", G_CALLBACK (grayscale_button), NULL);
 
-	if (image == NULL)
-		SDL_ExitSupress("Image non crée", renderer, fenetre);
+    //Rotate
+    GObject *rotat_button = gtk_builder_get_object(BUILDER, "rotation");
+    g_signal_connect (rotat_button, "activate", G_CALLBACK (rotate_button), NULL);
 
-	//----------------- Application des fonctions sur l'image -----------------//
+    //Smooth
+    GObject *smooth_button = gtk_builder_get_object(BUILDER, "lissage");
+    g_signal_connect (smooth_button, "activate", G_CALLBACK (smoothy_button), NULL);
 
-	otsu(image);
-	printf("Binarize, done!\n");
-	inverse(image);
-	image = draw_lines(image);
-	printf("Line Cuts\n");
-	isolateLine(image);
-	printf("Finish Treatment\n");
-	for (size_t i = 0; i < 10000; i++)
-        printf("%c",Final_Text[i]);
-	printf("\n");
-	printf("FINISH OCR\n");
+    //Start OCR
+    GObject *start = gtk_builder_get_object(BUILDER, "Start");
+    g_signal_connect (start, "activate", G_CALLBACK (start_OCR), NULL);
 
+    //save txt
+    GObject *save = gtk_builder_get_object(BUILDER, "save");
+    g_signal_connect (save, "activate", G_CALLBACK (save_txt), NULL);
 
-	//-------------------------------------------------------------------------//
+    //---------- END FUNC----------//
 
-	texture = SDL_CreateTextureFromSurface(renderer, image);
+    gtk_widget_show_all(window);
+    gtk_main();
 
-	SDL_FreeSurface(image); //on libere la surface qui ne sert plus a rien car la texture est crée
+		freeNeuralNet(ocrNet);
 
-	if (texture == NULL)
-		SDL_ExitSupress("Texture non crée", renderer, fenetre);
-
-	SDL_Rect rectangle; //sera le rectangle contenant l'image
-
-	if(SDL_QueryTexture(texture, NULL, NULL, &rectangle.w, &rectangle.h) != 0) //charge l'image en mémoire
-		SDL_ExitSupress("Texture non chargée", renderer, fenetre);
-
-	rectangle.x = (WIDTH - rectangle.w) / 2; //on centre le rectangle contenant l'image
-	rectangle.y = (HEIGHT - rectangle.h) / 2;
-
-	if(SDL_RenderCopy(renderer, texture, NULL, &rectangle) != 0) //copie la texture en mémoire sur le rendu
-		SDL_ExitSupress("Impossible d'afficher la texture", renderer, fenetre);
-
-
-	//------ Utilisation de la fenetre ------//
-
-	SDL_RenderPresent(renderer); //Rafraichi la fenetre pour le rendu : SDL_RenderClear(renderer) pour effacer le rendu
-	PressedKey();
-
-	SDL_Delay(XTIME); //pause for x time in ms
-
-	//------ FIN fenetre ------//
-
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(fenetre);
-	SDL_Quit();
-
-	freeNeuralNet(ocrNet);
-
-	return 0;
+    return 0;
 }

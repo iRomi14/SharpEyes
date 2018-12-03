@@ -10,7 +10,6 @@
 
 #include "neural_net/nn.h"
 
-//#define ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 #define saveFile "res/ocr_weights_2.se"
 
 #define HLAYER1 64
@@ -20,61 +19,61 @@ int main(int argc, char *argv[]){
 	srand (time(NULL));
 
   int EPOCHS = 10000;
-  size_t N = sizeof(ALPHABET)-1;
-  size_t variants = 1;
+  size_t N;
+	char alphabetImage[] = "res/training/arialAlphabet.bmp";
 
-  if(argc == 3){
+//	NN ocrNet;
+	ocrNet.layers = 2;
+	ocrNet.train = true;
+
+	ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
+	ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
+
+
+  if(argc == 2){
   	EPOCHS = atoi(argv[1]);
-  	variants = (size_t)atoi(argv[2]);
   }
 
-  printf("Loading %zu Characters\n", N*variants);
+	printf("Loading Training Set in %s\n", alphabetImage);
 
-  NN ocrNet;
-  ocrNet.layers = 2;
+	isolateLine(draw_lines(SDL_LoadBMP(alphabetImage)));
 
-  ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
-  ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
+	N = Final_Text.idx;
 
-  initMatrix(&ocrNet.weights[0], 784, HLAYER1, true);
-  initMatrix(&ocrNet.weights[1], HLAYER1, N, true);
-  //initMatrix(&ocrNet.weights[2], HLAYER2, N, true);
+  printf("%zu Characters Found\n", N);
+
+	initMatrix(&ocrNet.weights[0], 784, HLAYER1, true);
+	initMatrix(&ocrNet.weights[1], HLAYER1, N, true);
 
   SDL_Surface *image;
 
   char buffer[64];
-
-  char train_dir[] = "Banque Image/training/";
-  char image_name[] = "x/xx.bmp";
+  char image_name[] = "x.bmp";
 
   Matrix train_x;
   Matrix train_y;
 
-  initMatrix(&train_x, N*variants, 784, false);
-  initMatrix(&train_y, N*variants, N, false);
+  initMatrix(&train_x, N, 784, false);
+  initMatrix(&train_y, N, N, false);
 
   Vector v;
 
   for (size_t i = 0; i < N; i++){
-    //image_name[0] = ALPHABET[i];
 
-    //printf("%s\n", strncat(buffer, image_name, 64));
-    for(size_t j = 0; j < variants; j++){
+    sprintf(image_name, "%c.bmp", ALPHABET[i] != '.' ? ALPHABET[i] : '_');
+    strcpy(buffer, train_dir);
 
-      sprintf(image_name, "%c/%02zu.bmp", ALPHABET[i] != '.' ? ALPHABET[i] : '_', j);
-      strcpy(buffer, train_dir);
+    image = SDL_LoadBMP(strncat(buffer, image_name, 63));
+    if (image == NULL)
+      exit(-1);
 
-      //printf("%s\n", strncat(buffer, image_name, 64));
-      image = SDL_LoadBMP(strncat(buffer, image_name, 63));
-      if (image == NULL)
-        exit(-1);
+    train_y.data[i].data[i] = 1.0; // one hot encoding
+    to_binarize(image);
+    bmp_to_vector(&v, image);
 
-      train_y.data[i*variants+j].data[i] = 1.0; // one hot encoding
-      to_binarize(image);
-      bmp_to_vector(&v, image);
+		SDL_FreeSurface(image);
 
-      train_x.data[i*variants+j] = v;
-    }
+    train_x.data[i] = v;
   }
 
   Matrix y_pred, error;
