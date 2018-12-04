@@ -50,6 +50,8 @@ int main(int argc, char *argv[]){
 
   NN xorNet;
   xorNet.layers = 2;
+  xorNet.train = true;
+  xorNet.learning_rate = 0.8;
 
   xorNet.weights = (Matrix *) calloc (xorNet.layers, sizeof(Matrix));
   xorNet.part_d = (Matrix *) calloc (xorNet.layers, sizeof(Matrix));
