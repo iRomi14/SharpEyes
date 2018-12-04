@@ -67,7 +67,8 @@ SDL_Surface* draw_lines(SDL_Surface *img)
       {
           for(int k = 0; k < width; k++){
             pixel = SDL_MapRGB(img_copy -> format, 255, 0, 0);
-            put_pixel(img_copy, k, i - 1, pixel);
+            if(i > 0)
+              put_pixel(img_copy, k, i - 1, pixel);
           }
           firstCut = 0;
       }
@@ -176,7 +177,7 @@ void draw_sperate_char(SDL_Surface *img)
     {
       for(int k = 0; k < img -> h; k++){
         pixel = SDL_MapRGB(img -> format, 255, 0, 0);
-        if(i>0)
+        if(i > 0)
           put_pixel(img, i - 1, k, pixel);
       }
       canCut = 1;
