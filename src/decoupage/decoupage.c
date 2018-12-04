@@ -125,7 +125,7 @@ void isolateLine(SDL_Surface *img)
   }
 }
 
-/* Isolate in a new surface the line with characters in and start 
+/* Isolate in a new surface the line with characters in and start
 the segementation of characters on it */
 void cutSurface(SDL_Surface *img, int firstCut,int lastCut)
 {
@@ -176,7 +176,8 @@ void draw_sperate_char(SDL_Surface *img)
     {
       for(int k = 0; k < img -> h; k++){
         pixel = SDL_MapRGB(img -> format, 255, 0, 0);
-        put_pixel(img, i - 1, k, pixel);
+        if(i>0)
+          put_pixel(img, i - 1, k, pixel);
       }
       canCut = 1;
     }

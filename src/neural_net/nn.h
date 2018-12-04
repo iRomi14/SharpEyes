@@ -11,6 +11,7 @@ typedef struct NeuralNet {
   Matrix *part_d;
   size_t layers;
   bool train;
+  double learning_rate;
 } NN;
 
 Matrix forward(NN neuralNet, Matrix in);

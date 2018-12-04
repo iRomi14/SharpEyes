@@ -1,7 +1,5 @@
 #include "nn.h"
 
-double learning_rate = 0.08;
-
 Matrix forward(NN neuralNet, Matrix in){
   Matrix out = in;
   Matrix tmp;
@@ -55,7 +53,7 @@ void backward(NN neuralNet, Matrix error, Matrix in){
     freeMatrix(tmp);
 
     // weights[i] += learning_rate*gradient_weight
-    scalarMatrix(&tmp, gradW, learning_rate);
+    scalarMatrix(&tmp, gradW, neuralNet.learning_rate);
     freeMatrix(gradW);
     addMatrix(&gradW, neuralNet.weights[i], tmp);
     freeMatrix(neuralNet.weights[i]);

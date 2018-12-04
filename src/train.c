@@ -25,6 +25,7 @@ int main(int argc, char *argv[]){
 //	NN ocrNet;
 	ocrNet.layers = 2;
 	ocrNet.train = true;
+	ocrNet.learning_rate = 0.08;
 
 	ocrNet.weights = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
 	ocrNet.part_d = (Matrix *) calloc (ocrNet.layers, sizeof(Matrix));
