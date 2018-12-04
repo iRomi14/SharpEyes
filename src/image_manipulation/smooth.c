@@ -29,7 +29,7 @@ void remove_dots(SDL_Surface *img)
 
 int neighbors(SDL_Surface *img, int i, int j, int w, int h)
 {
-	int tab[7];
+	int tab[8];
 	Uint32 pixel;
 	//Uint8 r, g, b;
 
